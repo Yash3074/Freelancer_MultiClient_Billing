@@ -1,0 +1,38 @@
+{
+  "project": "Freelancer Tax Engine",
+  "last_updated": "2026-08-07",
+  "base_currency": "INR",
+  "exchange_rates": {
+    "INR": 1.0,
+    "USD": 95.20,
+    "EUR": 103.50,
+    "GBP": 121.80,
+    "AED": 25.92,
+    "SGD": 71.40
+  },
+  "gst": {
+    "standard_rate_percent": 18,
+    "export_rate_percent": 0
+  },
+  "tax_regime": {
+    "name": "New Tax Regime (FY 2025–26 & FY 2026–27)",
+    "financial_year": "2026-27",
+    "assessment_year": "2027-28",
+    "standard_deduction": 75000,
+    "rebate_section_87a": {
+      "applicable": true,
+      "max_taxable_income_threshold": 1200000,
+      "max_rebate_amount": 60000
+    },
+    "slabs": [
+      { "min": 0, "max": 400000, "rate": 0 },
+      { "min": 400001, "max": 800000, "rate": 5 },
+      { "min": 800001, "max": 1200000, "rate": 10 },
+      { "min": 1200001, "max": 1600000, "rate": 15 },
+      { "min": 1600001, "max": 2000000, "rate": 20 },
+      { "min": 2000001, "max": 2400000, "rate": 25 },
+      { "min": 2400001, "max": null, "rate": 30 }
+    ],
+    "cess_percent": 4
+  }
+}

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaxPulse - Freelancer Financial Engine</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Auth Screen -->
+  <div id="authScreen" class="auth-wrapper">
+    <div class="auth-bg-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+    </div>
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-logo">⚡</div>
+        <h1>TaxPulse</h1>
+        <p class="auth-subtitle">Freelancer Tax & Invoicing Portal</p>
+      </div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="loginEmail" required placeholder="alex@freelance.com">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPass" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn-gradient btn-block">Sign In</button>
+        <div class="auth-toggle">
+          <span id="showForgot">Forgot Password?</span>
+          <span id="showSignup">Create Account</span>
+        </div>
+      </form>
+
+      <form id="signupForm" style="display: none;">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="signupName" required placeholder="Alex Rivera">
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="signupEmail" required placeholder="alex@freelance.com">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="signupPass" required placeholder="Min. 6 characters" minlength="6">
+        </div>
+        <button type="submit" class="btn-gradient btn-block">Create Account</button>
+        <div class="auth-toggle">
+          <span id="showLogin">Already have an account? Sign In</span>
+        </div>
+      </form>
+
+      <form id="forgotForm" style="display: none;">
+        <div class="form-group">
+          <label>Enter Registered Email</label>
+          <input type="email" id="forgotEmail" required placeholder="alex@freelance.com">
+        </div>
+        <button type="submit" class="btn-gradient btn-block">Recover Password</button>
+        <div class="auth-toggle">
+          <span id="showLoginFromForgot">Back to Sign In</span>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="appScreen" class="app-layout" style="display: none;">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-top">
+        <div class="brand-title">
+          <span class="brand-icon">⚡</span>
+          <span>TaxPulse</span>
+        </div>
+        <nav class="sidebar-nav">
+          <button class="nav-btn active" data-tab="tab-dashboard">
+            <span class="nav-icon">📊</span> Dashboard & Tax
+          </button>
+          <button class="nav-btn" data-tab="tab-create-invoice">
+            <span class="nav-icon">📝</span> Create Invoice
+          </button>
+          <button class="nav-btn" data-tab="tab-invoices">
+            <span class="nav-icon">📄</span> All Invoices
+          </button>
+          <button class="nav-btn" data-tab="tab-clients">
+            <span class="nav-icon">👥</span> Manage Clients
+          </button>
+          <button class="nav-btn" data-tab="tab-profile">
+            <span class="nav-icon">👤</span> Edit Profile
+          </button>
+        </nav>
+      </div>
+
+      <div class="user-profile">
+        <div class="user-avatar" id="navUserAvatar">U</div>
+        <div class="user-info">
+          <div id="navUserName" class="user-name">User</div>
+          <div class="user-role">Freelancer Account</div>
+        </div>
+        <button id="btnLogout" class="btn-logout" title="Logout">⏻</button>
+      </div>
+    </aside>
+
+    <div class="mobile-header">
+      <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle menu">☰</button>
+      <span class="mobile-brand">⚡ TaxPulse</span>
+    </div>
+
+    <main class="main-content">
+
+      <!-- Dashboard -->
+      <section id="tab-dashboard" class="tab-content active">
+        <header class="page-header">
+          <div>
+            <h2>Financial Overview</h2>
+            <p class="page-desc">FY 2026–27 · Realized income & progressive tax breakdown</p>
+          </div>
+        </header>
+
+        <div class="stats-grid">
+          <div class="stat-card stat-gross">
+            <div class="stat-icon">💰</div>
+            <h4>Gross Realized Income</h4>
+            <div class="value" id="dashGrossIncome">₹0</div>
+            <span class="stat-note">Collected payments in INR</span>
+          </div>
+          <div class="stat-card stat-tax">
+            <div class="stat-icon">🏛️</div>
+            <h4>Est. Tax Liability</h4>
+            <div class="value" id="dashTaxLiability">₹0</div>
+            <span class="stat-note">New Regime · Slab-based</span>
+          </div>
+          <div class="stat-card stat-net">
+            <div class="stat-icon">✨</div>
+            <h4>Net After Tax</h4>
+            <div class="value" id="dashNetIncome">₹0</div>
+            <span class="stat-note">Take-home estimate</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title-row">
+            <h3>Income Tax Slabs Breakdown</h3>
+            <span class="chip">Progressive Engine</span>
+          </div>
+          <p id="rebateNotice" class="rebate-notice" style="display: none;">
+            ✅ Full Tax Rebate applied under Section 87A (Taxable Income ≤ ₹12,00,000)
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Income Slab</th>
+                  <th>Tax Rate</th>
+                  <th>Taxable Amount</th>
+                  <th>Tax Computed</th>
+                </tr>
+              </thead>
+              <tbody id="taxBreakdownBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Create Invoice -->
+      <section id="tab-create-invoice" class="tab-content">
+        <header class="page-header">
+          <div>
+            <h2>Generate New Invoice</h2>
+            <p class="page-desc">Add line items, set dates, and auto-calculate GST & totals</p>
+          </div>
+        </header>
+
+        <form id="invoiceForm" class="card">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="invoiceClientSelect">Select Client</label>
+              <select id="invoiceClientSelect"></select>
+            </div>
+            <div class="form-group">
+              <label for="invoiceDate">Invoice Date</label>
+              <input type="date" id="invoiceDate">
+            </div>
+            <div class="form-group">
+              <label for="dueDate">Due Date</label>
+              <input type="date" id="dueDate">
+            </div>
+            <div class="form-group">
+              <label for="invoiceInitialStatus">Initial Payment Status</label>
+              <select id="invoiceInitialStatus">
+                <option value="Unpaid" selected>Unpaid</option>
+                <option value="Partially Paid">Partially Paid</option>
+                <option value="Fully Paid">Fully Paid</option>
+              </select>
+            </div>
+            <div class="form-group" id="invoiceInitialPaidGroup" style="display: none;">
+              <label for="invoiceInitialPaid">Amount Received So Far</label>
+              <input type="number" id="invoiceInitialPaid" placeholder="0.00" min="0" step="0.01">
+            </div>
+          </div>
+
+          <div class="section-divider">
+            <h4>Line Items</h4>
+          </div>
+          <div class="line-items-header">
+            <span>Description</span>
+            <span>Qty</span>
+            <span>Rate</span>
+            <span></span>
+          </div>
+          <div id="lineItemsContainer"></div>
+          <button type="button" id="addItemBtn" class="btn-outline">+ Add Line Item</button>
+
+          <div id="invoicePreview" class="invoice-preview">
+            <div class="preview-row"><span>Subtotal</span><span id="previewSubtotal">—</span></div>
+            <div class="preview-row"><span>GST / Tax</span><span id="previewGST">—</span></div>
+            <div class="preview-row preview-total"><span>Total Due</span><span id="previewTotal">—</span></div>
+          </div>
+
+          <div class="form-group">
+            <label for="invoiceNotes">Notes / Payment Terms</label>
+            <textarea id="invoiceNotes" rows="2" placeholder="Payment due within 15 days via Wire Transfer / UPI..."></textarea>
+          </div>
+
+          <button type="submit" class="btn-gradient">Generate & Save Invoice</button>
+        </form>
+      </section>
+
+      <!-- All Invoices -->
+      <section id="tab-invoices" class="tab-content">
+        <header class="page-header">
+          <div>
+            <h2>All Generated Invoices</h2>
+            <p class="page-desc">Track payment status and print invoices</p>
+          </div>
+          <span id="invoiceCount" class="chip">0 invoices</span>
+        </header>
+        <div id="invoicesList"></div>
+      </section>
+
+      <!-- Clients -->
+      <section id="tab-clients" class="tab-content">
+        <header class="page-header">
+          <div>
+            <h2>Client Directory</h2>
+            <p class="page-desc">Manage billing contacts and currencies</p>
+          </div>
+        </header>
+
+        <form id="clientForm" class="card">
+          <h3 id="clientFormTitle" class="card-heading">Add New Client</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="clientName">Client / Company Name</label>
+              <input type="text" id="clientName" required placeholder="Acme Corp">
+            </div>
+            <div class="form-group">
+              <label for="clientEmail">Email Address</label>
+              <input type="email" id="clientEmail" required placeholder="billing@acme.com">
+            </div>
+            <div class="form-group">
+              <label for="clientCountry">Country</label>
+              <select id="clientCountry" required></select>
+            </div>
+            <div class="form-group">
+              <label for="clientCurrency">Billing Currency</label>
+              <select id="clientCurrency">
+                <option value="INR">INR (₹)</option>
+                <option value="USD">USD ($)</option>
+                <option value="EUR">EUR (€)</option>
+                <option value="GBP">GBP (£)</option>
+                <option value="AED">AED</option>
+                <option value="SGD">SGD (S$)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="clientGSTIN">GSTIN / Tax ID</label>
+              <input type="text" id="clientGSTIN" placeholder="Optional">
+            </div>
+            <div class="form-group form-group-full">
+              <label for="clientAddress">Billing Address</label>
+              <input type="text" id="clientAddress" required placeholder="Street, City, State, ZIP">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" id="btnSaveClient" class="btn-gradient">Save Client</button>
+            <button type="button" id="btnCancelClientEdit" class="btn-outline" style="display: none;">Cancel Edit</button>
+          </div>
+        </form>
+
+        <div id="clientsList"></div>
+      </section>
+
+      <!-- Edit Profile -->
+      <section id="tab-profile" class="tab-content">
+        <header class="page-header">
+          <div>
+            <h2>Edit Profile</h2>
+            <p class="page-desc">Update your account details and business information</p>
+          </div>
+        </header>
+
+        <form id="profileForm" class="card">
+          <div class="profile-header">
+            <div class="profile-avatar-lg" id="profileAvatar">U</div>
+            <div>
+              <h3 id="profileDisplayName">Your Name</h3>
+              <p id="profileDisplayEmail" class="page-desc">email@example.com</p>
+            </div>
+          </div>
+
+          <div class="section-divider"><h4>Personal Information</h4></div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="profileName">Full Name</label>
+              <input type="text" id="profileName" required placeholder="Alex Rivera">
+            </div>
+            <div class="form-group">
+              <label for="profileEmail">Email Address</label>
+              <input type="email" id="profileEmail" required placeholder="alex@freelance.com">
+            </div>
+            <div class="form-group">
+              <label for="profilePhone">Phone Number</label>
+              <input type="tel" id="profilePhone" placeholder="+91 98765 43210">
+            </div>
+            <div class="form-group">
+              <label for="profileCountry">Country</label>
+              <select id="profileCountry" required></select>
+            </div>
+            <div class="form-group form-group-full">
+              <label for="profileAddress">Business Address</label>
+              <input type="text" id="profileAddress" placeholder="Your registered business address">
+            </div>
+            <div class="form-group form-group-full">
+              <label for="profileBusinessName">Business / Trade Name</label>
+              <input type="text" id="profileBusinessName" placeholder="Optional — shown on invoices">
+            </div>
+          </div>
+
+          <div class="section-divider"><h4>Change Password</h4></div>
+          <p class="form-hint">Leave blank to keep your current password</p>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="profileCurrentPass">Current Password</label>
+              <input type="password" id="profileCurrentPass" placeholder="Required to change password">
+            </div>
+            <div class="form-group">
+              <label for="profileNewPass">New Password</label>
+              <input type="password" id="profileNewPass" placeholder="Min. 6 characters" minlength="6">
+            </div>
+          </div>
+
+          <button type="submit" class="btn-gradient">Save Profile Changes</button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
