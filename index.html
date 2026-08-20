@@ -166,6 +166,243 @@
             </table>
           </div>
         </div>
+        <!-- Freelancer Tax Benefits - Added by Yashit3075 -->
+
+<div class="card freelancer-tax-card">
+
+    <div class="card-title-row">
+
+        <h3>Freelancer Tax Benefits</h3>
+
+        <span class="chip">
+            Invoice Based
+        </span>
+
+    </div>
+
+
+    <p class="tax-benefit-description">
+
+        Add invoices to check potential benefits
+        available under India's presumptive taxation
+        scheme for eligible freelancers.
+
+    </p>
+
+
+    <!-- Eligibility controls -->
+
+    <div class="tax-benefit-settings">
+
+        <div class="form-group">
+
+            <label for="freelancerProfession">
+
+                Profession eligibility
+
+            </label>
+
+            <select id="freelancerProfession">
+
+                <option value="no">
+
+                    Not a specified profession
+
+                </option>
+
+                <option value="yes">
+
+                    I am in a specified profession
+
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="freelancerCashReceipts">
+
+                Cash receipts (% of gross receipts)
+
+            </label>
+
+            <input
+                type="number"
+                id="freelancerCashReceipts"
+                min="0"
+                max="100"
+                step="0.01"
+                value="0"
+            >
+
+        </div>
+
+    </div>
+
+
+    <!-- No invoices -->
+
+    <div
+        id="freelancerTaxEmpty"
+        class="tax-benefit-empty"
+    >
+
+        <div class="empty-state-icon">
+            🧾
+        </div>
+
+        <p>
+
+            Add an invoice to calculate
+            freelancer tax benefits.
+
+        </p>
+
+    </div>
+
+
+    <!-- Results -->
+
+    <div
+        id="freelancerTaxResults"
+        style="display: none;"
+    >
+
+        <div class="tax-benefit-highlight">
+
+            <div>
+
+                <span>
+                    Estimated Tax Saving
+                </span>
+
+                <strong id="freelancerTaxSaving">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+            <span
+                id="freelancer44ADAStatus"
+                class="badge badge-unpaid"
+            >
+                Not Eligible
+            </span>
+
+        </div>
+
+
+        <div class="tax-benefit-grid">
+
+
+            <div class="tax-benefit-item">
+
+                <span>
+                    Invoices Considered
+                </span>
+
+                <strong id="freelancerInvoiceCount">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="tax-benefit-item">
+
+                <span>
+                    Realized Professional Receipts
+                </span>
+
+                <strong id="freelancerGrossReceipts">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+            <div class="tax-benefit-item">
+
+                <span>
+                    44ADA Receipt Limit
+                </span>
+
+                <strong id="freelancer44ADALimit">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+            <div class="tax-benefit-item">
+
+                <span>
+                    Presumptive Income (50%)
+                </span>
+
+                <strong id="freelancerPresumptiveIncome">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="tax-benefit-comparison">
+
+
+            <div>
+
+                <span>
+                    Tax without 44ADA
+                </span>
+
+                <strong id="freelancerTaxWithout">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Tax with 44ADA
+                </span>
+
+                <strong id="freelancerTaxWith">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+        <p
+            id="freelancerTaxMessage"
+            class="rebate-notice"
+        ></p>
+
+
+        <p class="tax-benefit-disclaimer">
+
+            This is an estimate for informational purposes.
+            Actual eligibility and tax liability depend on
+            the taxpayer's complete circumstances.
+
+        </p>
+
+    </div>
+
+</div>
       </section>
 
       <!-- Create Invoice -->
