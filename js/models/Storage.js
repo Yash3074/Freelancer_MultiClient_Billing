@@ -1,8 +1,4 @@
 export class Storage {
-  // The session key is intentionally kept in sessionStorage (not localStorage).
-  // localStorage survives closing/restarting the app entirely, which meant a
-  // logged-in user stayed logged in forever. sessionStorage clears when the
-  // browser/tab is actually closed, while still surviving a normal page reload.
   static SESSION_KEY = 'fta_session';
 
   static get(key) {
@@ -39,5 +35,15 @@ export class Storage {
   static saveInvoices(invoices, userId) {
     const allInvoices = (this.get('fta_invoices') || []).filter(i => i.userId !== userId);
     this.set('fta_invoices', [...allInvoices, ...invoices]);
+  }
+
+  static getExpenses(userId) {
+    const expenses = this.get('fta_expenses') || [];
+    return expenses.filter(e => e.userId === userId);
+  }
+
+  static saveExpenses(expenses, userId) {
+    const allExpenses = (this.get('fta_expenses') || []).filter(e => e.userId !== userId);
+    this.set('fta_expenses', [...allExpenses, ...expenses]);
   }
 }

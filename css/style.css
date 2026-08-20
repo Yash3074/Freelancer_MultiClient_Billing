@@ -417,6 +417,8 @@ body {
 .stat-gross::before { background: linear-gradient(90deg, #6366f1, #818cf8); }
 .stat-tax::before { background: linear-gradient(90deg, #22d3ee, #06b6d4); }
 .stat-net::before { background: linear-gradient(90deg, #34d399, #10b981); }
+.stat-expense::before { background: linear-gradient(90deg, #fb7185, #f43f5e); }
+.stat-realnet::before { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
 
 .stat-card:hover {
   transform: translateY(-3px);
@@ -447,6 +449,8 @@ body {
 .stat-gross .value { color: var(--primary-light); }
 .stat-tax .value { color: var(--accent-cyan); }
 .stat-net .value { color: var(--accent-green); }
+.stat-expense .value { color: var(--accent-red); }
+.stat-realnet .value { color: var(--accent-amber); }
 
 .stat-note {
   display: block;
@@ -693,6 +697,84 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
 .badge-unpaid { background: rgba(251, 113, 133, 0.15); color: var(--accent-red); }
 .badge-partial { background: rgba(251, 191, 36, 0.15); color: var(--accent-amber); }
 .badge-paid { background: rgba(52, 211, 153, 0.15); color: var(--accent-green); }
+
+/* ── Expenses ── */
+.expense-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.expense-card-main {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-width: 0;
+}
+
+.expense-icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  background: rgba(251, 113, 133, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+}
+
+.expense-info h4 {
+  font-size: 0.98rem;
+  margin-bottom: 0.2rem;
+}
+
+.expense-meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.expense-amount {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-red);
+  white-space: nowrap;
+}
+
+.category-bar-row {
+  margin-bottom: 0.9rem;
+}
+
+.category-bar-row:last-child { margin-bottom: 0; }
+
+.category-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  margin-bottom: 0.35rem;
+  color: var(--text-muted);
+}
+
+.category-bar-label strong { color: var(--text-main); font-weight: 600; }
+
+.category-bar-track {
+  height: 8px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.category-bar-fill {
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(90deg, #fb7185, #f43f5e);
+  transition: width 0.4s ease;
+}
 
 .card-header {
   display: flex;

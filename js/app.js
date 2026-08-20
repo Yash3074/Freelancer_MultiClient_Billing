@@ -3,6 +3,7 @@ import { TaxEngine } from './models/TaxEngine.js';
 import { AuthController } from './controllers/AuthController.js';
 import { ClientController } from './controllers/ClientController.js';
 import { InvoiceController } from './controllers/InvoiceController.js';
+import { ExpenseController } from './controllers/ExpenseController.js';
 import { Toast } from './utils/Toast.js';
 
 class App {
@@ -11,6 +12,7 @@ class App {
     this.taxEngine = null;
     this.clientController = null;
     this.invoiceController = null;
+    this.expenseController = null;
     this.editingClientId = null;
     this.countries = [];
   }
@@ -48,6 +50,14 @@ class App {
     });
   }
 
+  populateExpenseCategorySelect() {
+    const select = document.getElementById('expenseCategory');
+    if (!select) return;
+    select.innerHTML = ExpenseController.CATEGORIES
+      .map(c => `<option value="${c.key}">${c.icon} ${c.key}</option>`)
+      .join('');
+  }
+
   getInitials(name) {
     if (!name) return 'U';
     return name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
@@ -74,16 +84,20 @@ class App {
 
     this.clientController = new ClientController(user.id);
     this.invoiceController = new InvoiceController(this.taxEngine, user.id);
+    this.expenseController = new ExpenseController(user.id);
 
+    this.populateExpenseCategorySelect();
     this.bindAppEvents();
     this.renderClientSelect();
     this.renderClientsList();
     this.renderInvoicesList();
+    this.renderExpensesList();
     this.updateDashboard();
     this.loadProfileForm();
 
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('invoiceDate').value = today;
+    document.getElementById('expenseDate').value = today;
 
     if (document.getElementById('lineItemsContainer').children.length === 0) {
       this.addLineItem();
@@ -302,6 +316,27 @@ class App {
         Toast.error(err.message);
       }
     });
+
+    const expenseForm = document.getElementById('expenseForm');
+    expenseForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const amount = parseFloat(document.getElementById('expenseAmount').value) || 0;
+      if (amount <= 0) return Toast.error('Please enter a valid expense amount.');
+
+      this.expenseController.addExpense({
+        description: document.getElementById('expenseDescription').value,
+        category: document.getElementById('expenseCategory').value,
+        amount,
+        date: document.getElementById('expenseDate').value,
+        notes: document.getElementById('expenseNotes').value
+      });
+
+      Toast.success('Expense logged!');
+      expenseForm.reset();
+      document.getElementById('expenseDate').value = new Date().toISOString().split('T')[0];
+      this.renderExpensesList();
+      this.updateDashboard();
+    });
   }
 
   resetClientForm() {
@@ -518,16 +553,103 @@ class App {
     });
   }
 
+  renderExpensesList() {
+    const list = document.getElementById('expensesList');
+    list.innerHTML = '';
+    const expenses = this.expenseController.getAllExpenses();
+
+    document.getElementById('expenseCount').textContent = `${expenses.length} expense${expenses.length !== 1 ? 's' : ''}`;
+    document.getElementById('expTotalAmount').textContent =
+      `₹${this.expenseController.getTotalExpenses().toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
+
+    const byCategory = this.expenseController.getExpensesByCategory();
+    const categoryCard = document.getElementById('expenseCategoryCard');
+    const barsContainer = document.getElementById('expenseCategoryBars');
+
+    if (byCategory.length === 0) {
+      categoryCard.style.display = 'none';
+      document.getElementById('expTopCategory').textContent = '—';
+      document.getElementById('expTopCategoryNote').textContent = 'No expenses yet';
+    } else {
+      categoryCard.style.display = 'block';
+      const maxAmount = byCategory[0][1];
+      barsContainer.innerHTML = byCategory.map(([category, amount]) => `
+        <div class="category-bar-row">
+          <div class="category-bar-label">
+            <span>${ExpenseController.getCategoryIcon(category)} ${category}</span>
+            <strong>₹${amount.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</strong>
+          </div>
+          <div class="category-bar-track">
+            <div class="category-bar-fill" style="width: ${(amount / maxAmount) * 100}%;"></div>
+          </div>
+        </div>
+      `).join('');
+
+      const [topCategory, topAmount] = byCategory[0];
+      document.getElementById('expTopCategory').textContent = `${ExpenseController.getCategoryIcon(topCategory)} ${topCategory}`;
+      document.getElementById('expTopCategoryNote').textContent =
+        `₹${topAmount.toLocaleString('en-IN', { maximumFractionDigits: 0 })} spent`;
+    }
+
+    if (expenses.length === 0) {
+      list.innerHTML = `
+        <div class="empty-state card">
+          <div class="empty-state-icon">🧾</div>
+          <p>No expenses logged yet. Add your first business expense above.</p>
+        </div>`;
+      return;
+    }
+
+    expenses.forEach(exp => {
+      const card = document.createElement('div');
+      card.className = 'card expense-card';
+      card.innerHTML = `
+        <div class="expense-card-main">
+          <div class="expense-icon">${ExpenseController.getCategoryIcon(exp.category)}</div>
+          <div class="expense-info">
+            <h4>${exp.description}</h4>
+            <div class="expense-meta">
+              <span>${exp.category}</span>
+              <span>·</span>
+              <span>${exp.date || '—'}</span>
+              ${exp.notes ? `<span>· ${exp.notes}</span>` : ''}
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <span class="expense-amount">₹${exp.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+          <button class="btn-delete" data-id="${exp.id}">Delete</button>
+        </div>
+      `;
+
+      card.querySelector('.btn-delete').onclick = () => {
+        this.expenseController.deleteExpense(exp.id);
+        Toast.info('Expense removed.');
+        this.renderExpensesList();
+        this.updateDashboard();
+      };
+
+      list.appendChild(card);
+    });
+  }
+
   updateDashboard() {
     const grossRealizedINR = this.invoiceController.getRealizedGrossAnnualINR();
     const taxProjection = this.taxEngine.calculateAnnualIncomeTax(grossRealizedINR);
+    const totalExpenses = this.expenseController ? this.expenseController.getTotalExpenses() : 0;
+    const netAfterTax = grossRealizedINR - taxProjection.totalTaxLiability;
+    const netAfterTaxAndExpenses = netAfterTax - totalExpenses;
 
     document.getElementById('dashGrossIncome').textContent =
       `₹${grossRealizedINR.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
     document.getElementById('dashTaxLiability').textContent =
       `₹${taxProjection.totalTaxLiability.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
     document.getElementById('dashNetIncome').textContent =
-      `₹${(grossRealizedINR - taxProjection.totalTaxLiability).toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
+      `₹${netAfterTax.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
+    document.getElementById('dashTotalExpenses').textContent =
+      `₹${totalExpenses.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
+    document.getElementById('dashRealNetIncome').textContent =
+      `₹${netAfterTaxAndExpenses.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
 
     const tbody = document.getElementById('taxBreakdownBody');
     tbody.innerHTML = '';
