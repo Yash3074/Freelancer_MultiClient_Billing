@@ -997,3 +997,139 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
   .auth-card { padding: 2rem 1.5rem; }
   .main-content { padding: 5rem 1rem 1.5rem; }
 }
+
+/* =========================================================
+   Freelancer Tax Benefits
+   Added by Yashit3075
+   ========================================================= */
+
+.freelancer-tax-card {
+    margin-top: 1.5rem;
+}
+
+.tax-benefit-description {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+}
+
+.tax-benefit-settings {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.tax-benefit-settings .form-group {
+    margin-bottom: 0;
+}
+
+.tax-benefit-empty {
+    text-align: center;
+    padding: 2rem 1rem;
+    border: 1px dashed var(--border-glass);
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
+}
+
+.tax-benefit-empty p {
+    margin: 0.75rem 0 0;
+}
+
+.tax-benefit-highlight {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+    border-radius: var(--radius-md);
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.tax-benefit-highlight span:first-child {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin-bottom: 0.4rem;
+}
+
+.tax-benefit-highlight strong {
+    font-size: 1.7rem;
+    color: var(--accent-green);
+}
+
+.tax-benefit-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.tax-benefit-item {
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    background: rgba(0, 0, 0, 0.12);
+    border: 1px solid var(--border-glass);
+}
+
+.tax-benefit-item span {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    margin-bottom: 0.45rem;
+}
+
+.tax-benefit-item strong {
+    font-size: 1.05rem;
+    color: var(--text-main);
+}
+
+.tax-benefit-comparison {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.tax-benefit-comparison > div {
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    background: rgba(0, 0, 0, 0.12);
+    border: 1px solid var(--border-glass);
+}
+
+.tax-benefit-comparison span {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    margin-bottom: 0.4rem;
+}
+
+.tax-benefit-comparison strong {
+    color: var(--text-main);
+    font-size: 1.05rem;
+}
+
+.tax-benefit-disclaimer {
+    margin-top: 1rem;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 700px) {
+
+    .tax-benefit-settings,
+    .tax-benefit-grid,
+    .tax-benefit-comparison {
+        grid-template-columns: 1fr;
+    }
+
+    .tax-benefit-highlight {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+}
