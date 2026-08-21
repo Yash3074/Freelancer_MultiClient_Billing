@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TaxPulse - Freelancer Financial Engine</title>
+  <title>TaxPulse — Freelancer Financial Engine</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- Auth Screen -->
+  
   <div id="authScreen" class="auth-wrapper">
     <div class="auth-bg-shapes">
       <div class="shape shape-1"></div>
@@ -70,7 +70,7 @@
     </div>
   </div>
 
-  <!-- Main App -->
+ 
   <div id="appScreen" class="app-layout" style="display: none;">
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-top">
@@ -90,6 +90,9 @@
           </button>
           <button class="nav-btn" data-tab="tab-clients">
             <span class="nav-icon">👥</span> Manage Clients
+          </button>
+          <button class="nav-btn" data-tab="tab-expenses">
+            <span class="nav-icon">🧾</span> Expenses
           </button>
           <button class="nav-btn" data-tab="tab-profile">
             <span class="nav-icon">👤</span> Edit Profile
@@ -114,7 +117,7 @@
 
     <main class="main-content">
 
-      <!-- Dashboard -->
+      
       <section id="tab-dashboard" class="tab-content active">
         <header class="page-header">
           <div>
@@ -141,6 +144,18 @@
             <h4>Net After Tax</h4>
             <div class="value" id="dashNetIncome">₹0</div>
             <span class="stat-note">Take-home estimate</span>
+          </div>
+          <div class="stat-card stat-expense">
+            <div class="stat-icon">🧾</div>
+            <h4>Business Expenses</h4>
+            <div class="value" id="dashTotalExpenses">₹0</div>
+            <span class="stat-note">All logged expenses</span>
+          </div>
+          <div class="stat-card stat-realnet">
+            <div class="stat-icon">🏦</div>
+            <h4>Net After Tax & Expenses</h4>
+            <div class="value" id="dashRealNetIncome">₹0</div>
+            <span class="stat-note">True take-home estimate</span>
           </div>
         </div>
 
@@ -405,7 +420,7 @@
 </div>
       </section>
 
-      <!-- Create Invoice -->
+      
       <section id="tab-create-invoice" class="tab-content">
         <header class="page-header">
           <div>
@@ -469,7 +484,7 @@
         </form>
       </section>
 
-      <!-- All Invoices -->
+      
       <section id="tab-invoices" class="tab-content">
         <header class="page-header">
           <div>
@@ -481,7 +496,7 @@
         <div id="invoicesList"></div>
       </section>
 
-      <!-- Clients -->
+     
       <section id="tab-clients" class="tab-content">
         <header class="page-header">
           <div>
@@ -534,7 +549,70 @@
         <div id="clientsList"></div>
       </section>
 
-      <!-- Edit Profile -->
+     
+      <section id="tab-expenses" class="tab-content">
+        <header class="page-header">
+          <div>
+            <h2>Business Expenses</h2>
+            <p class="page-desc">Log costs to see your true take-home income, net of tax and expenses</p>
+          </div>
+          <span id="expenseCount" class="chip">0 expenses</span>
+        </header>
+
+        <div class="stats-grid">
+          <div class="stat-card stat-expense">
+            <div class="stat-icon">🧾</div>
+            <h4>Total Logged Expenses</h4>
+            <div class="value" id="expTotalAmount">₹0</div>
+            <span class="stat-note">All-time, all categories</span>
+          </div>
+          <div class="stat-card" id="expTopCategoryCard">
+            <div class="stat-icon">🏷️</div>
+            <h4>Top Category</h4>
+            <div class="value" id="expTopCategory" style="font-size: 1.15rem;">—</div>
+            <span class="stat-note" id="expTopCategoryNote">No expenses yet</span>
+          </div>
+        </div>
+
+        <form id="expenseForm" class="card">
+          <h3 class="card-heading">Add Expense</h3>
+          <div class="form-grid">
+            <div class="form-group form-group-full">
+              <label for="expenseDescription">Description</label>
+              <input type="text" id="expenseDescription" required placeholder="e.g. Adobe Creative Cloud subscription">
+            </div>
+            <div class="form-group">
+              <label for="expenseCategory">Category</label>
+              <select id="expenseCategory"></select>
+            </div>
+            <div class="form-group">
+              <label for="expenseAmount">Amount (₹)</label>
+              <input type="number" id="expenseAmount" required min="0" step="0.01" placeholder="0.00">
+            </div>
+            <div class="form-group">
+              <label for="expenseDate">Date</label>
+              <input type="date" id="expenseDate">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="expenseNotes">Notes (optional)</label>
+            <input type="text" id="expenseNotes" placeholder="Any extra detail...">
+          </div>
+          <button type="submit" class="btn-gradient">Save Expense</button>
+        </form>
+
+        <div class="card" id="expenseCategoryCard" style="display: none;">
+          <div class="card-title-row">
+            <h3>Spend by Category</h3>
+            <span class="chip">Breakdown</span>
+          </div>
+          <div id="expenseCategoryBars"></div>
+        </div>
+
+        <div id="expensesList"></div>
+      </section>
+
+     
       <section id="tab-profile" class="tab-content">
         <header class="page-header">
           <div>
