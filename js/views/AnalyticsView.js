@@ -1,24 +1,10 @@
-/**
- * AnalyticsView  —  NEW FEATURE
- *
- * Renders the Revenue Analytics dashboard using Chart.js (loaded via CDN).
- * Three charts:
- *   1. Monthly Revenue Trend (bar chart — last 12 months of amountPaidINR)
- *   2. Revenue by Client    (doughnut chart)
- *   3. Invoice Status       (doughnut chart — Paid / Partial / Unpaid)
- */
 export class AnalyticsView {
-  /**
-   * @param {import('../controllers/InvoiceController.js').InvoiceController} invoiceController
-   * @param {import('../controllers/ExpenseController.js').ExpenseController} expenseController
-   */
   constructor(invoiceController, expenseController) {
     this.invoiceController = invoiceController;
     this.expenseController = expenseController;
     this._charts = {};
   }
 
-  // ── Public API: re-render all charts ───────────────────────────
   update() {
     const invoices = this.invoiceController.getAllInvoices();
     this._renderMonthlyTrend(invoices);
@@ -27,15 +13,13 @@ export class AnalyticsView {
     this._renderExpenseVsRevenue(invoices);
   }
 
-  // ── 1. Monthly Revenue Trend ────────────────────────────────────
   _renderMonthlyTrend(invoices) {
     const canvas = document.getElementById('chartMonthlyRevenue');
     if (!canvas) return;
 
-    // Build last-12-months labels
-    const now    = new Date();
+    const now = new Date();
     const labels = [];
-    const data   = [];
+    const data = [];
 
     for (let i = 11; i >= 0; i--) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
@@ -54,8 +38,8 @@ export class AnalyticsView {
     const ctx = canvas.getContext('2d');
 
     const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-    gradient.addColorStop(0,   'rgba(99, 102, 241, 0.6)');
-    gradient.addColorStop(1,   'rgba(99, 102, 241, 0.05)');
+    gradient.addColorStop(0, 'rgba(99, 102, 241, 0.6)');
+    gradient.addColorStop(1, 'rgba(99, 102, 241, 0.05)');
 
     this._charts.monthlyTrend = new window.Chart(ctx, {
       type: 'bar',
@@ -78,8 +62,7 @@ export class AnalyticsView {
           legend: { display: false },
           tooltip: {
             callbacks: {
-              label: ctx =>
-                ` ₹${ctx.parsed.y.toLocaleString('en-IN')}`
+              label: ctx => ` ₹${ctx.parsed.y.toLocaleString('en-IN')}`
             }
           }
         },
@@ -101,29 +84,27 @@ export class AnalyticsView {
     });
   }
 
-  // ── 2. Revenue by Client ────────────────────────────────────────
   _renderClientBreakdown(invoices) {
     const canvas = document.getElementById('chartClientRevenue');
     if (!canvas) return;
 
-    // Aggregate paid INR per client name
     const clientMap = {};
     invoices.forEach(inv => {
       const name = inv.client?.name || 'Unknown';
       clientMap[name] = (clientMap[name] || 0) + (inv.amountPaidINR || 0);
     });
 
-    const sorted  = Object.entries(clientMap)
+    const sorted = Object.entries(clientMap)
       .sort((a, b) => b[1] - a[1])
-      .slice(0, 8); // top 8
+      .slice(0, 8); 
 
     if (sorted.length === 0) {
       this._showEmpty(canvas, 'No invoice revenue yet');
       return;
     }
 
-    const labels = sorted.map(([name])    => name);
-    const data   = sorted.map(([, amount]) => Math.round(amount));
+    const labels = sorted.map(([name]) => name);
+    const data = sorted.map(([, amount]) => Math.round(amount));
 
     const palette = [
       '#6366f1','#a855f7','#ec4899','#22d3ee',
@@ -161,8 +142,7 @@ export class AnalyticsView {
           },
           tooltip: {
             callbacks: {
-              label: ctx =>
-                ` ${ctx.label}: ₹${ctx.parsed.toLocaleString('en-IN')}`
+              label: ctx => ` ${ctx.label}: ₹${ctx.parsed.toLocaleString('en-IN')}`
             }
           }
         }
@@ -170,7 +150,6 @@ export class AnalyticsView {
     });
   }
 
-  // ── 3. Invoice Status Distribution ─────────────────────────────
   _renderStatusDistribution(invoices) {
     const canvas = document.getElementById('chartInvoiceStatus');
     if (!canvas) return;
@@ -222,8 +201,7 @@ export class AnalyticsView {
           },
           tooltip: {
             callbacks: {
-              label: ctx =>
-                ` ${ctx.label}: ${ctx.parsed} invoice${ctx.parsed !== 1 ? 's' : ''}`
+              label: ctx => ` ${ctx.label}: ${ctx.parsed} invoice${ctx.parsed !== 1 ? 's' : ''}`
             }
           }
         }
@@ -231,12 +209,11 @@ export class AnalyticsView {
     });
   }
 
-  // ── 4. Expense vs Revenue ───────────────────────────────────────
   _renderExpenseVsRevenue(invoices) {
     const canvas = document.getElementById('chartExpenseRevenue');
     if (!canvas) return;
 
-    const now    = new Date();
+    const now = new Date();
     const labels = [];
     const revData = [];
     const expData = [];
@@ -300,8 +277,7 @@ export class AnalyticsView {
           },
           tooltip: {
             callbacks: {
-              label: ctx =>
-                ` ${ctx.dataset.label}: ₹${ctx.parsed.y.toLocaleString('en-IN')}`
+              label: ctx => ` ${ctx.dataset.label}: ₹${ctx.parsed.y.toLocaleString('en-IN')}`
             }
           }
         },
@@ -323,7 +299,6 @@ export class AnalyticsView {
     });
   }
 
-  // ── Helpers ─────────────────────────────────────────────────────
   _destroyChart(key) {
     if (this._charts[key]) {
       this._charts[key].destroy();
@@ -334,9 +309,9 @@ export class AnalyticsView {
   _showEmpty(canvas, msg) {
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle    = '#94a3b8';
-    ctx.font         = '14px Plus Jakarta Sans, sans-serif';
-    ctx.textAlign    = 'center';
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '14px Plus Jakarta Sans, sans-serif';
+    ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(msg, canvas.width / 2, canvas.height / 2);
   }
