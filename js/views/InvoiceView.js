@@ -1,16 +1,6 @@
-/**
- * InvoiceView
- * Handles rendering of the invoices list, line-item management,
- * live invoice preview, and the print-invoice popup.
- */
+
 export class InvoiceView {
-  /**
-   * @param {import('../controllers/InvoiceController.js').InvoiceController} invoiceController
-   * @param {import('../controllers/ClientController.js').ClientController} clientController
-   * @param {import('../models/TaxEngine.js').TaxEngine} taxEngine
-   * @param {import('../controllers/AuthController.js').AuthController} auth
-   * @param {Function} onDashboardUpdate  callback to refresh the dashboard
-   */
+
   constructor(invoiceController, clientController, taxEngine, auth, onDashboardUpdate) {
     this.invoiceController  = invoiceController;
     this.clientController   = clientController;
@@ -19,7 +9,6 @@ export class InvoiceView {
     this.onDashboardUpdate  = onDashboardUpdate;
   }
 
-  // ── Client select (invoice form) ────────────────────────────────
   renderClientSelect() {
     const select = document.getElementById('invoiceClientSelect');
     if (!select) return;
@@ -33,7 +22,6 @@ export class InvoiceView {
     });
   }
 
-  // ── Invoices list ───────────────────────────────────────────────
   renderInvoicesList() {
     const list = document.getElementById('invoicesList');
     if (!list) return;
@@ -118,7 +106,6 @@ export class InvoiceView {
         </div>
       `;
 
-      // status select → toggle partial input
       const statusSel   = card.querySelector('.status-select');
       const partialInp  = card.querySelector('.partial-amount-input');
       statusSel.onchange = e => {
@@ -126,7 +113,6 @@ export class InvoiceView {
           e.target.value === 'Partially Paid' ? 'inline-block' : 'none';
       };
 
-      // save payment
       card.querySelector('.btn-update-payment').onclick = () => {
         this.invoiceController.updatePaymentStatus(
           inv.id,
@@ -137,22 +123,18 @@ export class InvoiceView {
         this.onDashboardUpdate();
       };
 
-      // delete invoice
       card.querySelector('.btn-delete').onclick = () => {
         this.invoiceController.deleteInvoice(inv.id);
         this.renderInvoicesList();
         this.onDashboardUpdate();
       };
 
-      // print
       card.querySelector('.btn-print').onclick = () =>
         this.printInvoice(inv);
 
       list.appendChild(card);
     });
   }
-
-  // ── Live invoice preview ────────────────────────────────────────
   updateInvoicePreview() {
     const clientId = document.getElementById('invoiceClientSelect')?.value;
     const client   = clientId
@@ -190,8 +172,6 @@ export class InvoiceView {
       subtotal > 0 ? `${fmt(gstInfo.gstAmount)} (${gstInfo.rate}%)` : '—');
     setText('previewTotal', subtotal > 0 ? fmt(total) : '—');
   }
-
-  // ── Add line item row ───────────────────────────────────────────
   addLineItem() {
     const container = document.getElementById('lineItemsContainer');
     if (!container) return;
@@ -219,7 +199,6 @@ export class InvoiceView {
     container.appendChild(row);
   }
 
-  // ── Print invoice popup ─────────────────────────────────────────
   printInvoice(inv) {
     const user         = this.auth.getCurrentUser();
     const businessName = user?.businessName || 'TaxPulse Freelancer';
