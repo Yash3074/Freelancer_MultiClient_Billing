@@ -1,20 +1,12 @@
-/**
- * ClientView
- * Handles rendering of the client list and client select dropdown.
- */
+
 export class ClientView {
-  /**
-   * @param {import('../controllers/ClientController.js').ClientController} clientController
-   * @param {Function} onClientEdit   callback(clientId) when Edit is clicked
-   * @param {Function} onClientDelete callback(clientId) when Delete is clicked
-   */
+  
   constructor(clientController, onClientEdit, onClientDelete) {
     this.clientController = clientController;
     this.onClientEdit     = onClientEdit;
     this.onClientDelete   = onClientDelete;
   }
 
-  // ── Client select dropdown (invoice form) ───────────────────────
   renderClientSelect() {
     const select = document.getElementById('invoiceClientSelect');
     if (!select) return;
@@ -28,7 +20,6 @@ export class ClientView {
     });
   }
 
-  // ── Client cards list ───────────────────────────────────────────
   renderClientsList() {
     const list = document.getElementById('clientsList');
     if (!list) return;
@@ -80,8 +71,6 @@ export class ClientView {
       list.appendChild(card);
     });
   }
-
-  // ── Reset client form to "Add new" state ────────────────────────
   resetClientForm() {
     const titleEl  = document.getElementById('clientFormTitle');
     const saveBtn  = document.getElementById('btnSaveClient');
@@ -96,7 +85,6 @@ export class ClientView {
     if (countryEl) countryEl.value = 'India';
   }
 
-  // ── Populate form for editing ───────────────────────────────────
   populateEditForm(c) {
     const titleEl   = document.getElementById('clientFormTitle');
     const saveBtn   = document.getElementById('btnSaveClient');
