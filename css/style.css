@@ -135,7 +135,6 @@ body {
 
 .auth-toggle span:hover { color: var(--primary-light); text-decoration: underline; }
 
-/* ── App Layout ── */
 .app-layout {
   display: flex;
   min-height: 100vh;
@@ -349,7 +348,6 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Cards & Stats ── */
 .card {
   background: var(--bg-card);
   backdrop-filter: blur(16px);
@@ -859,7 +857,6 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
   flex-shrink: 0;
 }
 
-/* ── Empty State ── */
 .empty-state {
   text-align: center;
   padding: 3rem 2rem;
