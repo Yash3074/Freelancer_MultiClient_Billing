@@ -1,34 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="TaxPulse — Freelancer Tax, Invoicing & Revenue Analytics Portal. Manage clients, generate GST invoices, track expenses and visualize your earnings.">
   <title>TaxPulse — Freelancer Financial Engine</title>
   <link rel="stylesheet" href="css/style.css">
+  <!-- Chart.js CDN — used by the Analytics tab -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 </head>
+
 <body>
 
-  
+  <!-- ══════════════════════════════════════════════════════════
+       AUTH SCREEN
+       ══════════════════════════════════════════════════════════ -->
   <div id="authScreen" class="auth-wrapper">
     <div class="auth-bg-shapes">
       <div class="shape shape-1"></div>
       <div class="shape shape-2"></div>
       <div class="shape shape-3"></div>
     </div>
+
     <div class="auth-card">
       <div class="auth-header">
         <div class="auth-logo">⚡</div>
         <h1>TaxPulse</h1>
-        <p class="auth-subtitle">Freelancer Tax & Invoicing Portal</p>
+        <p class="auth-subtitle">Freelancer Tax &amp; Invoicing Portal</p>
       </div>
 
+      <!-- Login -->
       <form id="loginForm">
         <div class="form-group">
-          <label>Email Address</label>
+          <label for="loginEmail">Email Address</label>
           <input type="email" id="loginEmail" required placeholder="alex@freelance.com">
         </div>
         <div class="form-group">
-          <label>Password</label>
+          <label for="loginPass">Password</label>
           <input type="password" id="loginPass" required placeholder="••••••••">
         </div>
         <button type="submit" class="btn-gradient btn-block">Sign In</button>
@@ -38,17 +48,18 @@
         </div>
       </form>
 
-      <form id="signupForm" style="display: none;">
+      <!-- Sign Up -->
+      <form id="signupForm" style="display:none;">
         <div class="form-group">
-          <label>Full Name</label>
+          <label for="signupName">Full Name</label>
           <input type="text" id="signupName" required placeholder="Alex Rivera">
         </div>
         <div class="form-group">
-          <label>Email Address</label>
+          <label for="signupEmail">Email Address</label>
           <input type="email" id="signupEmail" required placeholder="alex@freelance.com">
         </div>
         <div class="form-group">
-          <label>Password</label>
+          <label for="signupPass">Password</label>
           <input type="password" id="signupPass" required placeholder="Min. 6 characters" minlength="6">
         </div>
         <button type="submit" class="btn-gradient btn-block">Create Account</button>
@@ -57,9 +68,10 @@
         </div>
       </form>
 
-      <form id="forgotForm" style="display: none;">
+      <!-- Forgot Password -->
+      <form id="forgotForm" style="display:none;">
         <div class="form-group">
-          <label>Enter Registered Email</label>
+          <label for="forgotEmail">Enter Registered Email</label>
           <input type="email" id="forgotEmail" required placeholder="alex@freelance.com">
         </div>
         <button type="submit" class="btn-gradient btn-block">Recover Password</button>
@@ -70,17 +82,26 @@
     </div>
   </div>
 
- 
-  <div id="appScreen" class="app-layout" style="display: none;">
+
+  <!-- ══════════════════════════════════════════════════════════
+       MAIN APP
+       ══════════════════════════════════════════════════════════ -->
+  <div id="appScreen" class="app-layout" style="display:none;">
+
+    <!-- ── Sidebar ─────────────────────────────────────────── -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-top">
         <div class="brand-title">
           <span class="brand-icon">⚡</span>
           <span>TaxPulse</span>
         </div>
+
         <nav class="sidebar-nav">
           <button class="nav-btn active" data-tab="tab-dashboard">
-            <span class="nav-icon">📊</span> Dashboard & Tax
+            <span class="nav-icon">📊</span> Dashboard &amp; Tax
+          </button>
+          <button class="nav-btn" data-tab="tab-analytics">
+            <span class="nav-icon">📈</span> Analytics
           </button>
           <button class="nav-btn" data-tab="tab-create-invoice">
             <span class="nav-icon">📝</span> Create Invoice
@@ -110,19 +131,23 @@
       </div>
     </aside>
 
+    <!-- ── Mobile header ───────────────────────────────────── -->
     <div class="mobile-header">
       <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle menu">☰</button>
       <span class="mobile-brand">⚡ TaxPulse</span>
     </div>
 
+    <!-- ── Main Content ────────────────────────────────────── -->
     <main class="main-content">
 
-      
+      <!-- ════════════════════════════════════════════════════
+           TAB: Dashboard & Tax
+           ════════════════════════════════════════════════════ -->
       <section id="tab-dashboard" class="tab-content active">
         <header class="page-header">
           <div>
             <h2>Financial Overview</h2>
-            <p class="page-desc">FY 2026–27 · Realized income & progressive tax breakdown</p>
+            <p class="page-desc">FY 2026–27 · Realized income &amp; progressive tax breakdown</p>
           </div>
         </header>
 
@@ -153,7 +178,7 @@
           </div>
           <div class="stat-card stat-realnet">
             <div class="stat-icon">🏦</div>
-            <h4>Net After Tax & Expenses</h4>
+            <h4>Net After Tax &amp; Expenses</h4>
             <div class="value" id="dashRealNetIncome">₹0</div>
             <span class="stat-note">True take-home estimate</span>
           </div>
@@ -164,7 +189,7 @@
             <h3>Income Tax Slabs Breakdown</h3>
             <span class="chip">Progressive Engine</span>
           </div>
-          <p id="rebateNotice" class="rebate-notice" style="display: none;">
+          <p id="rebateNotice" class="rebate-notice" style="display:none;">
             ✅ Full Tax Rebate applied under Section 87A (Taxable Income ≤ ₹12,00,000)
           </p>
           <div class="table-wrap">
@@ -181,251 +206,166 @@
             </table>
           </div>
         </div>
-        <!-- Freelancer Tax Benefits - Added by Yashit3075 -->
 
-<div class="card freelancer-tax-card">
+        <!-- Freelancer Tax Benefits — Added by Yashit3075 -->
+        <div class="card freelancer-tax-card">
+          <div class="card-title-row">
+            <h3>Freelancer Tax Benefits</h3>
+            <span class="chip">Invoice Based</span>
+          </div>
+          <p class="tax-benefit-description">
+            Add invoices to check potential benefits available under India's
+            presumptive taxation scheme for eligible freelancers.
+          </p>
 
-    <div class="card-title-row">
+          <div class="tax-benefit-settings">
+            <div class="form-group">
+              <label for="freelancerProfession">Profession eligibility</label>
+              <select id="freelancerProfession">
+                <option value="no">Not a specified profession</option>
+                <option value="yes">I am in a specified profession</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="freelancerCashReceipts">Cash receipts (% of gross receipts)</label>
+              <input type="number" id="freelancerCashReceipts" min="0" max="100" step="0.01" value="0">
+            </div>
+          </div>
 
-        <h3>Freelancer Tax Benefits</h3>
+          <div id="freelancerTaxEmpty" class="tax-benefit-empty">
+            <div class="empty-state-icon">🧾</div>
+            <p>Add an invoice to calculate freelancer tax benefits.</p>
+          </div>
 
-        <span class="chip">
-            Invoice Based
-        </span>
+          <div id="freelancerTaxResults" style="display:none;">
+            <div class="tax-benefit-highlight">
+              <div>
+                <span>Estimated Tax Saving</span>
+                <strong id="freelancerTaxSaving">₹0</strong>
+              </div>
+              <span id="freelancer44ADAStatus" class="badge badge-unpaid">Not Eligible</span>
+            </div>
 
-    </div>
+            <div class="tax-benefit-grid">
+              <div class="tax-benefit-item">
+                <span>Invoices Considered</span>
+                <strong id="freelancerInvoiceCount">0</strong>
+              </div>
+              <div class="tax-benefit-item">
+                <span>Realized Professional Receipts</span>
+                <strong id="freelancerGrossReceipts">₹0</strong>
+              </div>
+              <div class="tax-benefit-item">
+                <span>44ADA Receipt Limit</span>
+                <strong id="freelancer44ADALimit">₹0</strong>
+              </div>
+              <div class="tax-benefit-item">
+                <span>Presumptive Income (50%)</span>
+                <strong id="freelancerPresumptiveIncome">₹0</strong>
+              </div>
+            </div>
 
+            <div class="tax-benefit-comparison">
+              <div>
+                <span>Tax without 44ADA</span>
+                <strong id="freelancerTaxWithout">₹0</strong>
+              </div>
+              <div>
+                <span>Tax with 44ADA</span>
+                <strong id="freelancerTaxWith">₹0</strong>
+              </div>
+            </div>
 
-    <p class="tax-benefit-description">
-
-        Add invoices to check potential benefits
-        available under India's presumptive taxation
-        scheme for eligible freelancers.
-
-    </p>
-
-
-    <!-- Eligibility controls -->
-
-    <div class="tax-benefit-settings">
-
-        <div class="form-group">
-
-            <label for="freelancerProfession">
-
-                Profession eligibility
-
-            </label>
-
-            <select id="freelancerProfession">
-
-                <option value="no">
-
-                    Not a specified profession
-
-                </option>
-
-                <option value="yes">
-
-                    I am in a specified profession
-
-                </option>
-
-            </select>
-
+            <p id="freelancerTaxMessage" class="rebate-notice"></p>
+            <p class="tax-benefit-disclaimer">
+              This is an estimate for informational purposes. Actual eligibility and
+              tax liability depend on the taxpayer's complete circumstances.
+            </p>
+          </div>
         </div>
-
-
-        <div class="form-group">
-
-            <label for="freelancerCashReceipts">
-
-                Cash receipts (% of gross receipts)
-
-            </label>
-
-            <input
-                type="number"
-                id="freelancerCashReceipts"
-                min="0"
-                max="100"
-                step="0.01"
-                value="0"
-            >
-
-        </div>
-
-    </div>
-
-
-    <!-- No invoices -->
-
-    <div
-        id="freelancerTaxEmpty"
-        class="tax-benefit-empty"
-    >
-
-        <div class="empty-state-icon">
-            🧾
-        </div>
-
-        <p>
-
-            Add an invoice to calculate
-            freelancer tax benefits.
-
-        </p>
-
-    </div>
-
-
-    <!-- Results -->
-
-    <div
-        id="freelancerTaxResults"
-        style="display: none;"
-    >
-
-        <div class="tax-benefit-highlight">
-
-            <div>
-
-                <span>
-                    Estimated Tax Saving
-                </span>
-
-                <strong id="freelancerTaxSaving">
-                    ₹0
-                </strong>
-
-            </div>
-
-
-            <span
-                id="freelancer44ADAStatus"
-                class="badge badge-unpaid"
-            >
-                Not Eligible
-            </span>
-
-        </div>
-
-
-        <div class="tax-benefit-grid">
-
-
-            <div class="tax-benefit-item">
-
-                <span>
-                    Invoices Considered
-                </span>
-
-                <strong id="freelancerInvoiceCount">
-                    0
-                </strong>
-
-            </div>
-
-
-            <div class="tax-benefit-item">
-
-                <span>
-                    Realized Professional Receipts
-                </span>
-
-                <strong id="freelancerGrossReceipts">
-                    ₹0
-                </strong>
-
-            </div>
-
-
-            <div class="tax-benefit-item">
-
-                <span>
-                    44ADA Receipt Limit
-                </span>
-
-                <strong id="freelancer44ADALimit">
-                    ₹0
-                </strong>
-
-            </div>
-
-
-            <div class="tax-benefit-item">
-
-                <span>
-                    Presumptive Income (50%)
-                </span>
-
-                <strong id="freelancerPresumptiveIncome">
-                    ₹0
-                </strong>
-
-            </div>
-
-
-        </div>
-
-
-        <div class="tax-benefit-comparison">
-
-
-            <div>
-
-                <span>
-                    Tax without 44ADA
-                </span>
-
-                <strong id="freelancerTaxWithout">
-                    ₹0
-                </strong>
-
-            </div>
-
-
-            <div>
-
-                <span>
-                    Tax with 44ADA
-                </span>
-
-                <strong id="freelancerTaxWith">
-                    ₹0
-                </strong>
-
-            </div>
-
-
-        </div>
-
-
-        <p
-            id="freelancerTaxMessage"
-            class="rebate-notice"
-        ></p>
-
-
-        <p class="tax-benefit-disclaimer">
-
-            This is an estimate for informational purposes.
-            Actual eligibility and tax liability depend on
-            the taxpayer's complete circumstances.
-
-        </p>
-
-    </div>
-
-</div>
       </section>
 
-      
+
+      <!-- ════════════════════════════════════════════════════
+           TAB: Analytics (NEW FEATURE)
+           ════════════════════════════════════════════════════ -->
+      <section id="tab-analytics" class="tab-content">
+        <header class="page-header">
+          <div>
+            <h2>Revenue Analytics</h2>
+            <p class="page-desc">Visualize your income, clients, and invoice health</p>
+          </div>
+        </header>
+
+        <!-- Monthly Revenue Trend -->
+        <div class="card analytics-card">
+          <div class="card-title-row">
+            <h3>📈 Monthly Revenue Trend</h3>
+            <span class="chip">Last 12 Months</span>
+          </div>
+          <p class="page-desc" style="margin-bottom:1.25rem;">
+            INR revenue collected per month based on invoice paid amounts.
+          </p>
+          <div class="chart-container chart-container-bar">
+            <canvas id="chartMonthlyRevenue"></canvas>
+          </div>
+        </div>
+
+        <!-- Two-column charts -->
+        <div class="analytics-grid">
+          <!-- Revenue by Client -->
+          <div class="card analytics-card">
+            <div class="card-title-row">
+              <h3>🥧 Revenue by Client</h3>
+              <span class="chip">Top 8</span>
+            </div>
+            <p class="page-desc" style="margin-bottom:1.25rem;">
+              Share of total collected revenue per client.
+            </p>
+            <div class="chart-container chart-container-donut">
+              <canvas id="chartClientRevenue"></canvas>
+            </div>
+          </div>
+
+          <!-- Invoice Status Distribution -->
+          <div class="card analytics-card">
+            <div class="card-title-row">
+              <h3>📊 Invoice Status</h3>
+              <span class="chip">All Time</span>
+            </div>
+            <p class="page-desc" style="margin-bottom:1.25rem;">
+              Distribution of Paid, Partially Paid, and Unpaid invoices.
+            </p>
+            <div class="chart-container chart-container-donut">
+              <canvas id="chartInvoiceStatus"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Revenue vs Expenses -->
+        <div class="card analytics-card">
+          <div class="card-title-row">
+            <h3>💹 Revenue vs Expenses</h3>
+            <span class="chip">Last 6 Months</span>
+          </div>
+          <p class="page-desc" style="margin-bottom:1.25rem;">
+            Compare monthly revenue collected against expenses logged.
+          </p>
+          <div class="chart-container chart-container-bar">
+            <canvas id="chartExpenseRevenue"></canvas>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ════════════════════════════════════════════════════
+           TAB: Create Invoice
+           ════════════════════════════════════════════════════ -->
       <section id="tab-create-invoice" class="tab-content">
         <header class="page-header">
           <div>
             <h2>Generate New Invoice</h2>
-            <p class="page-desc">Add line items, set dates, and auto-calculate GST & totals</p>
+            <p class="page-desc">Add line items, set dates, and auto-calculate GST &amp; totals</p>
           </div>
         </header>
 
@@ -451,7 +391,7 @@
                 <option value="Fully Paid">Fully Paid</option>
               </select>
             </div>
-            <div class="form-group" id="invoiceInitialPaidGroup" style="display: none;">
+            <div class="form-group" id="invoiceInitialPaidGroup" style="display:none;">
               <label for="invoiceInitialPaid">Amount Received So Far</label>
               <input type="number" id="invoiceInitialPaid" placeholder="0.00" min="0" step="0.01">
             </div>
@@ -470,21 +410,25 @@
           <button type="button" id="addItemBtn" class="btn-outline">+ Add Line Item</button>
 
           <div id="invoicePreview" class="invoice-preview">
-            <div class="preview-row"><span>Subtotal</span><span id="previewSubtotal">—</span></div>
-            <div class="preview-row"><span>GST / Tax</span><span id="previewGST">—</span></div>
+            <div class="preview-row"><span>Subtotal</span> <span id="previewSubtotal">—</span></div>
+            <div class="preview-row"><span>GST / Tax</span> <span id="previewGST">—</span></div>
             <div class="preview-row preview-total"><span>Total Due</span><span id="previewTotal">—</span></div>
           </div>
 
           <div class="form-group">
             <label for="invoiceNotes">Notes / Payment Terms</label>
-            <textarea id="invoiceNotes" rows="2" placeholder="Payment due within 15 days via Wire Transfer / UPI..."></textarea>
+            <textarea id="invoiceNotes" rows="2"
+              placeholder="Payment due within 15 days via Wire Transfer / UPI…"></textarea>
           </div>
 
-          <button type="submit" class="btn-gradient">Generate & Save Invoice</button>
+          <button type="submit" class="btn-gradient">Generate &amp; Save Invoice</button>
         </form>
       </section>
 
-      
+
+      <!-- ════════════════════════════════════════════════════
+           TAB: All Invoices
+           ════════════════════════════════════════════════════ -->
       <section id="tab-invoices" class="tab-content">
         <header class="page-header">
           <div>
@@ -496,7 +440,10 @@
         <div id="invoicesList"></div>
       </section>
 
-     
+
+      <!-- ════════════════════════════════════════════════════
+           TAB: Manage Clients
+           ════════════════════════════════════════════════════ -->
       <section id="tab-clients" class="tab-content">
         <header class="page-header">
           <div>
@@ -542,14 +489,18 @@
           </div>
           <div class="form-actions">
             <button type="submit" id="btnSaveClient" class="btn-gradient">Save Client</button>
-            <button type="button" id="btnCancelClientEdit" class="btn-outline" style="display: none;">Cancel Edit</button>
+            <button type="button" id="btnCancelClientEdit" class="btn-outline" style="display:none;">Cancel
+              Edit</button>
           </div>
         </form>
 
         <div id="clientsList"></div>
       </section>
 
-     
+
+      <!-- ════════════════════════════════════════════════════
+           TAB: Expenses (BUG FIXED — now fully functional)
+           ════════════════════════════════════════════════════ -->
       <section id="tab-expenses" class="tab-content">
         <header class="page-header">
           <div>
@@ -569,13 +520,13 @@
           <div class="stat-card" id="expTopCategoryCard">
             <div class="stat-icon">🏷️</div>
             <h4>Top Category</h4>
-            <div class="value" id="expTopCategory" style="font-size: 1.15rem;">—</div>
+            <div class="value" id="expTopCategory" style="font-size:1.15rem;">—</div>
             <span class="stat-note" id="expTopCategoryNote">No expenses yet</span>
           </div>
         </div>
 
         <form id="expenseForm" class="card">
-          <h3 class="card-heading">Add Expense</h3>
+          <h3 id="expenseFormTitle" class="card-heading">Add Expense</h3>
           <div class="form-grid">
             <div class="form-group form-group-full">
               <label for="expenseDescription">Description</label>
@@ -596,12 +547,16 @@
           </div>
           <div class="form-group">
             <label for="expenseNotes">Notes (optional)</label>
-            <input type="text" id="expenseNotes" placeholder="Any extra detail...">
+            <input type="text" id="expenseNotes" placeholder="Any extra detail…">
           </div>
-          <button type="submit" class="btn-gradient">Save Expense</button>
+          <div class="form-actions">
+            <button type="submit" id="btnSaveExpense" class="btn-gradient">Save Expense</button>
+            <button type="button" id="btnCancelExpenseEdit" class="btn-outline" style="display:none;">Cancel
+              Edit</button>
+          </div>
         </form>
 
-        <div class="card" id="expenseCategoryCard" style="display: none;">
+        <div class="card" id="expenseCategoryCard" style="display:none;">
           <div class="card-title-row">
             <h3>Spend by Category</h3>
             <span class="chip">Breakdown</span>
@@ -612,7 +567,10 @@
         <div id="expensesList"></div>
       </section>
 
-     
+
+      <!-- ════════════════════════════════════════════════════
+           TAB: Edit Profile
+           ════════════════════════════════════════════════════ -->
       <section id="tab-profile" class="tab-content">
         <header class="page-header">
           <div>
@@ -630,7 +588,9 @@
             </div>
           </div>
 
-          <div class="section-divider"><h4>Personal Information</h4></div>
+          <div class="section-divider">
+            <h4>Personal Information</h4>
+          </div>
           <div class="form-grid">
             <div class="form-group">
               <label for="profileName">Full Name</label>
@@ -658,7 +618,9 @@
             </div>
           </div>
 
-          <div class="section-divider"><h4>Change Password</h4></div>
+          <div class="section-divider">
+            <h4>Change Password</h4>
+          </div>
           <p class="form-hint">Leave blank to keep your current password</p>
           <div class="form-grid">
             <div class="form-group">
@@ -674,9 +636,11 @@
           <button type="submit" class="btn-gradient">Save Profile Changes</button>
         </form>
       </section>
+
     </main>
   </div>
 
   <script type="module" src="js/app.js"></script>
 </body>
+
 </html>
