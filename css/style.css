@@ -44,8 +44,6 @@ body {
   background-attachment: fixed;
   line-height: 1.5;
 }
-
-/* ── Auth Screen ── */
 .auth-wrapper {
   display: flex;
   justify-content: center;
@@ -318,7 +316,6 @@ body {
   min-height: 100vh;
 }
 
-/* ── Page Header ── */
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -340,7 +337,6 @@ body {
   margin-top: 0.25rem;
 }
 
-/* ── Tabs ── */
 .tab-content {
   display: none;
   animation: fadeIn 0.35s ease;
@@ -469,7 +465,6 @@ body {
   font-size: 0.88rem;
 }
 
-/* ── Forms ── */
 .form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -588,7 +583,6 @@ textarea { resize: vertical; min-height: 80px; }
   color: var(--primary-light);
 }
 
-/* ── Line Items ── */
 .line-items-header {
   display: grid;
   grid-template-columns: 3fr 1fr 1fr 40px;
@@ -655,7 +649,6 @@ textarea { resize: vertical; min-height: 80px; }
 
 .preview-total span:last-child { color: var(--accent-green); }
 
-/* ── Tables ── */
 .table-wrap {
   overflow-x: auto;
   border-radius: var(--radius-md);
@@ -684,7 +677,6 @@ th {
 
 tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
 
-/* ── Badges & Actions ── */
 .badge {
   padding: 0.3rem 0.7rem;
   border-radius: 20px;
@@ -698,7 +690,6 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
 .badge-partial { background: rgba(251, 191, 36, 0.15); color: var(--accent-amber); }
 .badge-paid { background: rgba(52, 211, 153, 0.15); color: var(--accent-green); }
 
-/* ── Expenses ── */
 .expense-card {
   display: flex;
   align-items: center;
@@ -847,7 +838,6 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
 
 .partial-amount-input { width: 140px; }
 
-/* ── Profile ── */
 .profile-header {
   display: flex;
   align-items: center;
@@ -899,7 +889,6 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
 
 .client-meta strong { color: var(--text-main); }
 
-/* ── Toast Notifications ── */
 .toast-container {
   position: fixed;
   top: 1.25rem;
@@ -955,7 +944,6 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
 .toast-error .toast-icon { background: rgba(251, 113, 133, 0.2); color: var(--accent-red); }
 .toast-info .toast-icon { background: rgba(34, 211, 238, 0.2); color: var(--accent-cyan); }
 
-/* ── Responsive ── */
 @media (max-width: 900px) {
   .sidebar {
     transform: translateX(-100%);
@@ -997,11 +985,6 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
   .auth-card { padding: 2rem 1.5rem; }
   .main-content { padding: 5rem 1rem 1.5rem; }
 }
-
-/* =========================================================
-   Freelancer Tax Benefits
-   Added by Yashit3075
-   ========================================================= */
 
 .freelancer-tax-card {
     margin-top: 1.5rem;
@@ -1132,4 +1115,94 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
         align-items: flex-start;
     }
 
+}
+
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.analytics-card {
+  margin-bottom: 0;
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+}
+
+.chart-container-bar {
+  height: 300px;
+}
+
+.chart-container-donut {
+  height: 280px;
+}
+
+@media (max-width: 768px) {
+  .analytics-grid {
+    grid-template-columns: 1fr;
+  }
+  .chart-container-bar   { height: 220px; }
+  .chart-container-donut { height: 240px; }
+}
+
+.expense-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.expense-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.expense-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.expense-edit-btn,
+.expense-delete-btn {
+  background: transparent;
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.9rem;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+}
+
+.expense-edit-btn:hover {
+  background: rgba(251, 191, 36, 0.15);
+  border-color: rgba(251, 191, 36, 0.4);
+}
+
+.expense-delete-btn:hover {
+  background: rgba(251, 113, 133, 0.15);
+  border-color: rgba(251, 113, 133, 0.4);
+}
+
+.expense-category-tag {
+  display: inline-block;
+  background: rgba(99, 102, 241, 0.12);
+  color: var(--primary-light);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 20px;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 600;
 }
