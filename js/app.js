@@ -4,7 +4,7 @@ import { FreelancerTaxBenefits } from './models/FreelancerTaxBenefits.js';
 import { AuthController }        from './controllers/AuthController.js';
 import { ClientController }      from './controllers/ClientController.js';
 import { InvoiceController }     from './controllers/InvoiceController.js';
-import { ExpenseController }     from './controllers/ExpenseController.js';  // BUG FIX: was never imported
+import { ExpenseController }     from './controllers/ExpenseController.js'; 
 import { Toast }                 from './utils/Toast.js';
 
 import { DashboardView }  from './views/DashboardView.js';
@@ -85,27 +85,23 @@ class App {
 
     this._showAppView();
 
-    // Nav user info
     document.getElementById('navUserName').textContent   = user.name;
     document.getElementById('navUserAvatar').textContent = this._getInitials(user.name);
 
-    // ── Controllers ─────────────────────────────────────────────
     this.clientController      = new ClientController(user.id);
     this.invoiceController     = new InvoiceController(this.taxEngine, user.id);
     this.expenseController     = new ExpenseController(user.id);   // BUG FIX
     this.freelancerTaxBenefits = new FreelancerTaxBenefits(this.taxEngine);
 
-    // ── Shared update callback ───────────────────────────────────
     const updateDashboard = () => {
       this.dashboardView?.update();
       this.analyticsView?.update();
     };
 
-    // ── Views ────────────────────────────────────────────────────
     this.dashboardView = new DashboardView(
       this.taxEngine,
       this.invoiceController,
-      this.expenseController,       // BUG FIX: was missing
+      this.expenseController,     
       this.freelancerTaxBenefits
     );
 
@@ -120,12 +116,10 @@ class App {
     this.clientView = new ClientView(
       this.clientController,
       (client) => {
-        // On edit: populate form
         this.editingClientId = client.id;
         this.clientView.populateEditForm(client);
       },
       (clientId) => {
-        // On delete
         this.clientController.deleteClient(clientId);
         Toast.info('Client removed.');
         this.invoiceView.renderClientSelect();
@@ -143,36 +137,31 @@ class App {
       this.expenseController
     );
 
-    // ── Bind all events ──────────────────────────────────────────
     this._bindAppEvents();
 
-    // ── Initial render ───────────────────────────────────────────
-    this.expenseView.populateCategorySelect();   // BUG FIX: was never called
-    this.expenseView.bindExpenseForm(Toast);     // BUG FIX: was never called
+    this.expenseView.populateCategorySelect();   
+    this.expenseView.bindExpenseForm(Toast);   
 
     this.invoiceView.renderClientSelect();
     this.clientView.renderClientsList();
     this.invoiceView.renderInvoicesList();
-    this.expenseView.renderExpensesList();       // BUG FIX: was never called
+    this.expenseView.renderExpensesList();  
 
     this.dashboardView.update();
     this.analyticsView.update();
 
     this._loadProfileForm();
 
-    // Default invoice date
     const today = new Date().toISOString().split('T')[0];
     const invDateEl = document.getElementById('invoiceDate');
     if (invDateEl) invDateEl.value = today;
 
-    // Add first line item
     const container = document.getElementById('lineItemsContainer');
     if (container && container.children.length === 0) {
       this.invoiceView.addLineItem();
     }
   }
 
-  // ── Profile form ──────────────────────────────────────────────
   _loadProfileForm() {
     const user = this.auth.getCurrentUser();
     if (!user) return;
@@ -191,7 +180,6 @@ class App {
     this._setText('profileAvatar',       this._getInitials(user.name));
   }
 
-  // ── Auth events ───────────────────────────────────────────────
   _bindAuthEvents() {
     const loginForm  = document.getElementById('loginForm');
     const signupForm = document.getElementById('signupForm');
@@ -269,10 +257,7 @@ class App {
         this._showAuthView();
       });
   }
-
-  // ── App events (navigation, forms) ───────────────────────────
   _bindAppEvents() {
-    // ── Navigation tabs ──────────────────────────────────────────
     document.querySelectorAll('.nav-btn').forEach(btn => {
       btn.onclick = () => {
         document.querySelectorAll('.nav-btn')
@@ -284,20 +269,17 @@ class App {
         document.getElementById(btn.dataset.tab)?.classList.add('active');
         document.getElementById('sidebar')?.classList.remove('open');
 
-        // Refresh charts whenever Analytics tab is opened
         if (btn.dataset.tab === 'tab-analytics') {
           this.analyticsView?.update();
         }
       };
     });
 
-    // ── Sidebar toggle (mobile) ──────────────────────────────────
     document.getElementById('sidebarToggle')
       ?.addEventListener('click', () => {
         document.getElementById('sidebar')?.classList.toggle('open');
       });
 
-    // ── Client form ──────────────────────────────────────────────
     document.getElementById('clientForm').onsubmit = e => {
       e.preventDefault();
       this.clientController.addClient({
