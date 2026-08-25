@@ -8,15 +8,11 @@
     content="TaxPulse — Freelancer Tax, Invoicing & Revenue Analytics Portal. Manage clients, generate GST invoices, track expenses and visualize your earnings.">
   <title>TaxPulse — Freelancer Financial Engine</title>
   <link rel="stylesheet" href="css/style.css">
-  <!-- Chart.js CDN — used by the Analytics tab -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 </head>
 
 <body>
 
-  <!-- ══════════════════════════════════════════════════════════
-       AUTH SCREEN
-       ══════════════════════════════════════════════════════════ -->
   <div id="authScreen" class="auth-wrapper">
     <div class="auth-bg-shapes">
       <div class="shape shape-1"></div>
@@ -31,7 +27,6 @@
         <p class="auth-subtitle">Freelancer Tax &amp; Invoicing Portal</p>
       </div>
 
-      <!-- Login -->
       <form id="loginForm">
         <div class="form-group">
           <label for="loginEmail">Email Address</label>
@@ -48,7 +43,6 @@
         </div>
       </form>
 
-      <!-- Sign Up -->
       <form id="signupForm" style="display:none;">
         <div class="form-group">
           <label for="signupName">Full Name</label>
@@ -68,7 +62,6 @@
         </div>
       </form>
 
-      <!-- Forgot Password -->
       <form id="forgotForm" style="display:none;">
         <div class="form-group">
           <label for="forgotEmail">Enter Registered Email</label>
@@ -82,13 +75,8 @@
     </div>
   </div>
 
-
-  <!-- ══════════════════════════════════════════════════════════
-       MAIN APP
-       ══════════════════════════════════════════════════════════ -->
   <div id="appScreen" class="app-layout" style="display:none;">
 
-    <!-- ── Sidebar ─────────────────────────────────────────── -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-top">
         <div class="brand-title">
@@ -131,18 +119,13 @@
       </div>
     </aside>
 
-    <!-- ── Mobile header ───────────────────────────────────── -->
     <div class="mobile-header">
       <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle menu">☰</button>
       <span class="mobile-brand">⚡ TaxPulse</span>
     </div>
 
-    <!-- ── Main Content ────────────────────────────────────── -->
     <main class="main-content">
 
-      <!-- ════════════════════════════════════════════════════
-           TAB: Dashboard & Tax
-           ════════════════════════════════════════════════════ -->
       <section id="tab-dashboard" class="tab-content active">
         <header class="page-header">
           <div>
@@ -207,7 +190,6 @@
           </div>
         </div>
 
-        <!-- Freelancer Tax Benefits — Added by Yashit3075 -->
         <div class="card freelancer-tax-card">
           <div class="card-title-row">
             <h3>Freelancer Tax Benefits</h3>
@@ -286,9 +268,6 @@
       </section>
 
 
-      <!-- ════════════════════════════════════════════════════
-           TAB: Analytics (NEW FEATURE)
-           ════════════════════════════════════════════════════ -->
       <section id="tab-analytics" class="tab-content">
         <header class="page-header">
           <div>
@@ -297,7 +276,6 @@
           </div>
         </header>
 
-        <!-- Monthly Revenue Trend -->
         <div class="card analytics-card">
           <div class="card-title-row">
             <h3>📈 Monthly Revenue Trend</h3>
@@ -311,9 +289,7 @@
           </div>
         </div>
 
-        <!-- Two-column charts -->
         <div class="analytics-grid">
-          <!-- Revenue by Client -->
           <div class="card analytics-card">
             <div class="card-title-row">
               <h3>🥧 Revenue by Client</h3>
@@ -327,7 +303,6 @@
             </div>
           </div>
 
-          <!-- Invoice Status Distribution -->
           <div class="card analytics-card">
             <div class="card-title-row">
               <h3>📊 Invoice Status</h3>
@@ -342,7 +317,6 @@
           </div>
         </div>
 
-        <!-- Revenue vs Expenses -->
         <div class="card analytics-card">
           <div class="card-title-row">
             <h3>💹 Revenue vs Expenses</h3>
@@ -358,9 +332,6 @@
       </section>
 
 
-      <!-- ════════════════════════════════════════════════════
-           TAB: Create Invoice
-           ════════════════════════════════════════════════════ -->
       <section id="tab-create-invoice" class="tab-content">
         <header class="page-header">
           <div>
@@ -426,9 +397,6 @@
       </section>
 
 
-      <!-- ════════════════════════════════════════════════════
-           TAB: All Invoices
-           ════════════════════════════════════════════════════ -->
       <section id="tab-invoices" class="tab-content">
         <header class="page-header">
           <div>
@@ -441,9 +409,6 @@
       </section>
 
 
-      <!-- ════════════════════════════════════════════════════
-           TAB: Manage Clients
-           ════════════════════════════════════════════════════ -->
       <section id="tab-clients" class="tab-content">
         <header class="page-header">
           <div>
@@ -498,9 +463,6 @@
       </section>
 
 
-      <!-- ════════════════════════════════════════════════════
-           TAB: Expenses (BUG FIXED — now fully functional)
-           ════════════════════════════════════════════════════ -->
       <section id="tab-expenses" class="tab-content">
         <header class="page-header">
           <div>
@@ -568,9 +530,6 @@
       </section>
 
 
-      <!-- ════════════════════════════════════════════════════
-           TAB: Edit Profile
-           ════════════════════════════════════════════════════ -->
       <section id="tab-profile" class="tab-content">
         <header class="page-header">
           <div>
