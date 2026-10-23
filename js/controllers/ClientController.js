@@ -1,42 +1,40 @@
-import { Storage } from '../models/Storage.js';
+import { clientApi } from '../services/api.js';
 
 export class ClientController {
-  constructor(userId) {
-    this.userId = userId;
-    this.clients = Storage.getClients(this.userId);
+  constructor() {
+    this.clients = [];
   }
 
-  addClient(clientData) {
-    const client = {
-      id: clientData.id || ('CLI-' + Date.now()),
-      userId: this.userId,
-      name: clientData.name,
-      email: clientData.email,
-      country: clientData.country || 'India',
-      currency: clientData.currency || 'INR',
-      gstin: clientData.gstin || 'N/A',
-      address: clientData.address || '',
-      createdAt: clientData.createdAt || new Date().toISOString()
-    };
-
-    const existingIndex = this.clients.findIndex(c => c.id === client.id);
-    if (existingIndex >= 0) {
-      this.clients[existingIndex] = client;
-    } else {
-      this.clients.push(client);
+  async loadClients() {
+    try {
+      this.clients = await clientApi.getAll();
+      return this.clients;
+    } catch (err) {
+      console.error('Failed to load clients from API:', err);
+      return [];
     }
-
-    Storage.saveClients(this.clients, this.userId);
-    return client;
   }
 
-  deleteClient(id) {
-    this.clients = this.clients.filter(c => c.id !== id);
-    Storage.saveClients(this.clients, this.userId);
+  async addClient(clientData) {
+    if (clientData.id) {
+      const updated = await clientApi.update(clientData.id, clientData);
+      const index = this.clients.findIndex(c => (c._id || c.id) === clientData.id);
+      if (index >= 0) this.clients[index] = updated;
+      return updated;
+    } else {
+      const created = await clientApi.create(clientData);
+      this.clients.unshift(created);
+      return created;
+    }
+  }
+
+  async deleteClient(id) {
+    await clientApi.delete(id);
+    this.clients = this.clients.filter(c => (c._id || c.id) !== id);
   }
 
   getClientById(id) {
-    return this.clients.find(c => c.id === id);
+    return this.clients.find(c => (c._id || c.id) === id);
   }
 
   getAllClients() {

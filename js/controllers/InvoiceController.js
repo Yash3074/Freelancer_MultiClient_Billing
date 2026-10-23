@@ -1,79 +1,57 @@
-import { Storage } from '../models/Storage.js';
+import { invoiceApi } from '../services/api.js';
 
 export class InvoiceController {
-  constructor(taxEngine, userId) {
+  constructor(taxEngine) {
     this.taxEngine = taxEngine;
-    this.userId = userId;
-    this.invoices = Storage.getInvoices(this.userId);
+    this.invoices = [];
   }
 
-  createInvoice(client, items, invoiceDate, dueDate, notes, status = 'Unpaid', amountPaid = 0) {
-    let subtotal = 0;
-    items.forEach(item => {
-      subtotal += Number(item.quantity) * Number(item.rate);
-    });
+  async loadInvoices() {
+    try {
+      this.invoices = await invoiceApi.getAll();
+      return this.invoices;
+    } catch (err) {
+      console.error('Failed to load invoices from API:', err);
+      return [];
+    }
+  }
 
-    const isInternational = client.currency !== 'INR' || client.country !== 'India';
-    const gstInfo = this.taxEngine.calculateGST(subtotal, isInternational);
-    const totalAmount = subtotal + gstInfo.gstAmount;
-    const totalINR = this.taxEngine.convertToINR(totalAmount, client.currency);
-
-    let actualPaid = Number(amountPaid);
-    if (status === 'Fully Paid') actualPaid = totalAmount;
-    if (status === 'Unpaid') actualPaid = 0;
-
-    const actualPaidINR = this.taxEngine.convertToINR(actualPaid, client.currency);
-
-    const invoice = {
-      id: 'INV-' + Math.floor(100000 + Math.random() * 900000),
-      userId: this.userId,
-      client,
+  async createInvoice(clientId, items, invoiceDate, dueDate, notes, status = 'Unpaid', amountPaid = 0) {
+    const payload = {
+      clientId,
       items,
-      currency: client.currency,
-      subtotal,
-      gstRate: gstInfo.rate,
-      gstAmount: gstInfo.gstAmount,
-      totalAmount,
-      totalINR,
-      status, // 'Fully Paid', 'Partially Paid', 'Unpaid'
-      amountPaid: actualPaid,
-      amountPaidINR: actualPaidINR,
-      isInternational,
       invoiceDate,
       dueDate,
       notes,
-      createdAt: new Date().toISOString()
+      status,
+      amountPaid: Number(amountPaid) || 0,
     };
 
-    this.invoices.push(invoice);
-    Storage.saveInvoices(this.invoices, this.userId);
-    return invoice;
+    const newInvoice = await invoiceApi.create(payload);
+    this.invoices.unshift(newInvoice);
+    return newInvoice;
   }
 
-  updatePaymentStatus(id, newStatus, amountPaid = 0) {
-    const invoice = this.invoices.find(inv => inv.id === id);
-    if (!invoice) return;
-
-    invoice.status = newStatus;
-    if (newStatus === 'Fully Paid') {
-      invoice.amountPaid = invoice.totalAmount;
-    } else if (newStatus === 'Unpaid') {
-      invoice.amountPaid = 0;
-    } else {
-      invoice.amountPaid = Math.min(Number(amountPaid), invoice.totalAmount);
+  async updatePaymentStatus(id, newStatus, amountPaid = 0) {
+    const updated = await invoiceApi.updateStatus(id, newStatus, amountPaid);
+    const index = this.invoices.findIndex(inv => (inv._id || inv.id) === id);
+    if (index >= 0) {
+      this.invoices[index] = updated;
     }
-
-    invoice.amountPaidINR = this.taxEngine.convertToINR(invoice.amountPaid, invoice.currency);
-    Storage.saveInvoices(this.invoices, this.userId);
+    return updated;
   }
 
-  deleteInvoice(id) {
-    this.invoices = this.invoices.filter(inv => inv.id !== id);
-    Storage.saveInvoices(this.invoices, this.userId);
+  async deleteInvoice(id) {
+    await invoiceApi.delete(id);
+    this.invoices = this.invoices.filter(inv => (inv._id || inv.id) !== id);
   }
 
   getAllInvoices() {
     return this.invoices;
+  }
+
+  getInvoiceById(id) {
+    return this.invoices.find(inv => (inv._id || inv.id) === id);
   }
 
   getRealizedGrossAnnualINR() {

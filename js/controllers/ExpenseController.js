@@ -1,4 +1,4 @@
-import { Storage } from '../models/Storage.js';
+import { expenseApi } from '../services/api.js';
 
 export class ExpenseController {
   static CATEGORIES = [
@@ -9,12 +9,11 @@ export class ExpenseController {
     { key: 'Marketing', icon: '📣' },
     { key: 'Professional Fees', icon: '📋' },
     { key: 'Internet & Phone', icon: '📱' },
-    { key: 'Other', icon: '🧾' }
+    { key: 'Other', icon: '🧾' },
   ];
 
-  constructor(userId) {
-    this.userId = userId;
-    this.expenses = Storage.getExpenses(this.userId);
+  constructor() {
+    this.expenses = [];
   }
 
   static getCategoryIcon(category) {
@@ -22,51 +21,51 @@ export class ExpenseController {
     return match ? match.icon : '🧾';
   }
 
-  addExpense(data) {
-    const expense = {
-      id: data.id || ('EXP-' + Date.now()),
-      userId: this.userId,
-      description: data.description,
-      category: data.category || 'Other',
-      amount: Number(data.amount) || 0,
-      date: data.date || new Date().toISOString().split('T')[0],
-      notes: data.notes || '',
-      createdAt: data.createdAt || new Date().toISOString()
-    };
-
-    const existingIndex = this.expenses.findIndex(e => e.id === expense.id);
-    if (existingIndex >= 0) {
-      this.expenses[existingIndex] = expense;
-    } else {
-      this.expenses.push(expense);
+  async loadExpenses() {
+    try {
+      this.expenses = await expenseApi.getAll();
+      return this.expenses;
+    } catch (err) {
+      console.error('Failed to load expenses from API:', err);
+      return [];
     }
-
-    Storage.saveExpenses(this.expenses, this.userId);
-    return expense;
   }
 
-  deleteExpense(id) {
-    this.expenses = this.expenses.filter(e => e.id !== id);
-    Storage.saveExpenses(this.expenses, this.userId);
+  async addExpense(formData, id = null) {
+    let result;
+    if (id) {
+      result = await expenseApi.update(id, formData);
+      const index = this.expenses.findIndex(e => (e._id || e.id) === id);
+      if (index >= 0) this.expenses[index] = result;
+    } else {
+      result = await expenseApi.create(formData);
+      this.expenses.unshift(result);
+    }
+    return result;
+  }
+
+  async deleteExpense(id) {
+    await expenseApi.delete(id);
+    this.expenses = this.expenses.filter(e => (e._id || e.id) !== id);
   }
 
   getExpenseById(id) {
-    return this.expenses.find(e => e.id === id);
+    return this.expenses.find(e => (e._id || e.id) === id);
   }
 
   getAllExpenses() {
-    return [...this.expenses].sort((a, b) => new Date(b.date) - new Date(a.date));
+    return this.expenses;
   }
 
   getTotalExpenses() {
-    return this.expenses.reduce((sum, e) => sum + e.amount, 0);
+    return this.expenses.reduce((sum, e) => sum + (e.amount || 0), 0);
   }
 
   getExpensesByCategory() {
     const totals = {};
     ExpenseController.CATEGORIES.forEach(c => { totals[c.key] = 0; });
     this.expenses.forEach(e => {
-      totals[e.category] = (totals[e.category] || 0) + e.amount;
+      totals[e.category] = (totals[e.category] || 0) + (e.amount || 0);
     });
     return Object.entries(totals)
       .filter(([, amount]) => amount > 0)
