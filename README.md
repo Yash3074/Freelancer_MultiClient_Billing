@@ -131,15 +131,3 @@ http://localhost:5000
 
 ---
 
-## 📦 6. Pilot Cloud Deployment
-
-To deploy for free on **Render.com** (Pilot Stage):
-1. Push this repository to GitHub.
-2. Log into [Render.com](https://render.com) and click **New Web Service**.
-3. Select your GitHub repository.
-4. Set:
-   - **Environment:** `Node`
-   - **Build Command:** `npm install`
-   - **Start Command:** `npm start`
-5. Add Environment Variables from `.env` (`MONGO_URI`, `JWT_SECRET`, `NODE_ENV=production`).
-6. Click **Deploy Web Service** to receive a live HTTPS link!
