@@ -5,14 +5,791 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
-    content="TaxPulse — Freelancer Tax, Invoicing & Revenue Analytics Portal. Manage clients, generate GST invoices, track expenses and visualize your earnings.">
-  <title>TaxPulse — Freelancer Financial Engine</title>
+    content="TaxPulse Pro — Advanced Freelancer Billing, Multi-Client Invoicing, Real-Time Expense & Tax Architecture with Section 44ADA & AI Automation.">
+  <title>TaxPulse Pro — Freelancer Financial Engine</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <!-- Socket.IO Client for Real-time event communication with CDN fallback -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    if (typeof io === 'undefined') {
+      document.write('<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"><\/script>');
+    }
+  </script>
 </head>
 
 <body>
 
+  <!-- ========================================================
+       COMMERCIAL SAAS LANDING PAGE (PUBLIC STOREFRONT)
+       ======================================================== -->
+  <div id="landingScreen" class="landing-screen">
+    
+    <!-- STICKY GLASS HEADER -->
+    <header class="landing-header">
+      <div class="landing-container landing-nav-inner">
+        <a href="#" class="landing-brand">
+          <span class="landing-brand-icon">⚡</span>
+          <span class="landing-brand-text">TaxPulse <span class="badge-pro">PRO</span></span>
+        </a>
+
+        <nav class="landing-nav-links">
+          <a href="#features">Features</a>
+          <a href="#calculator">Tax Simulator</a>
+          <a href="#how-it-works">How It Works</a>
+          <a href="#comparison">Compare</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+
+        <div class="landing-nav-actions">
+          <div class="live-ticker-chip">
+            <span class="pulse-dot"></span>
+            <span>USD $1 = ₹95.20</span>
+          </div>
+          <button id="btnLandingSignIn" class="btn-ghost-sm">Sign In</button>
+          <button id="btnLandingGetStarted" class="btn-gradient-sm">Get Started Free →</button>
+          <button id="btnLandingDashboard" class="btn-gradient-sm" style="display:none;">Go to Dashboard →</button>
+          <button id="landingMobileToggle" class="landing-mobile-toggle" aria-label="Toggle navigation">☰</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- MOBILE MENU DROPDOWN -->
+    <div id="landingMobileMenu" class="landing-mobile-menu">
+      <a href="#features" class="mobile-nav-link">Features</a>
+      <a href="#calculator" class="mobile-nav-link">Tax Simulator</a>
+      <a href="#how-it-works" class="mobile-nav-link">How It Works</a>
+      <a href="#comparison" class="mobile-nav-link">Compare</a>
+      <a href="#pricing" class="mobile-nav-link">Pricing</a>
+      <a href="#faq" class="mobile-nav-link">FAQ</a>
+      <div class="mobile-menu-actions">
+        <button id="btnMobileSignIn" class="btn-ghost btn-block">Sign In</button>
+        <button id="btnMobileGetStarted" class="btn-gradient btn-block">Get Started Free →</button>
+      </div>
+    </div>
+
+    <!-- HERO SECTION -->
+    <section class="landing-hero">
+      <div class="landing-hero-bg">
+        <div class="hero-glow glow-1"></div>
+        <div class="hero-glow glow-2"></div>
+        <div class="hero-grid-pattern"></div>
+      </div>
+
+      <div class="landing-container hero-content">
+        <div class="hero-badge-pill">
+          <span class="badge-sparkle">✨</span>
+          <span>FY 2026–27 Section 44ADA Presumptive Scheme Active</span>
+          <span class="badge-divider">•</span>
+          <span class="badge-accent">50% Flat Tax Deduction</span>
+        </div>
+
+        <h1 class="hero-title">
+          Invoicing, Global Payments &amp; Tax Optimization.<br>
+          <span class="gradient-text">Built for Independent Tech Talent.</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          Bill clients across 7 currencies with 0% export GST, collect domestic payments with dynamic on-screen UPI QR codes, track deductible expenses with AI, and legally cut your taxes under Section 44ADA.
+        </p>
+
+        <div class="hero-cta-group">
+          <button id="btnHeroGetStarted" class="btn-gradient btn-hero">
+            <span>Start Free Workspace</span>
+            <span class="cta-arrow">→</span>
+          </button>
+          <a href="#calculator" class="btn-hero-secondary">
+            <span class="btn-icon">🧮</span>
+            <span>Calculate Tax Savings</span>
+          </a>
+        </div>
+
+        <div class="hero-trust-bar">
+          <div class="trust-item">
+            <span class="trust-icon">🏛️</span>
+            <span><strong>Section 44ADA</strong> 50% Presumptive Scheme</span>
+          </div>
+          <div class="trust-item">
+            <span class="trust-icon">🌐</span>
+            <span><strong>7 Currencies</strong> Live Auto-Conversion</span>
+          </div>
+          <div class="trust-item">
+            <span class="trust-icon">📱</span>
+            <span><strong>Dynamic UPI QR</strong> Instant Settlement</span>
+          </div>
+          <div class="trust-item">
+            <span class="trust-icon">🤖</span>
+            <span><strong>AI NLP</strong> Smart Bill Classification</span>
+          </div>
+          <div class="trust-item">
+            <span class="trust-icon">☁️</span>
+            <span><strong>MongoDB Atlas</strong> Live Cloud Cluster</span>
+          </div>
+        </div>
+
+        <!-- HERO APP SHOWCASE MOCKUP -->
+        <div class="hero-mockup-wrapper">
+          <div class="mockup-window">
+            <div class="mockup-header">
+              <div class="mockup-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="mockup-address-bar">
+                <span>🔒 taxpulse-pro.cloud/dashboard</span>
+              </div>
+              <div class="mockup-live-status">
+                <span class="pulse-dot"></span>
+                <span>Socket.IO Live</span>
+              </div>
+            </div>
+
+            <div class="mockup-body">
+              <div class="mockup-stats-row">
+                <div class="mock-stat stat-primary">
+                  <span class="mock-label">Gross Realized (INR)</span>
+                  <span class="mock-val">₹24,50,000</span>
+                  <span class="mock-sub positive">↑ +18.4% vs last FY</span>
+                </div>
+                <div class="mock-stat stat-success">
+                  <span class="mock-label">Sec 44ADA Tax Saved</span>
+                  <span class="mock-val text-emerald">₹3,74,400</span>
+                  <span class="mock-sub text-emerald">50% Presumptive Profit</span>
+                </div>
+                <div class="mock-stat stat-info">
+                  <span class="mock-label">Invoices Settled</span>
+                  <span class="mock-val">14 / 14</span>
+                  <span class="mock-sub">100% On-Time Settlement</span>
+                </div>
+                <div class="mock-stat stat-accent">
+                  <span class="mock-label">Real Net Take-Home</span>
+                  <span class="mock-val">₹22,86,500</span>
+                  <span class="mock-sub">After Presumptive Tax</span>
+                </div>
+              </div>
+
+              <div class="mockup-main-preview">
+                <div class="mockup-invoice-sample">
+                  <div class="mock-inv-head">
+                    <div>
+                      <strong style="color:var(--text-main);">Invoice #INV-2026-084</strong>
+                      <p style="font-size:0.75rem;color:var(--text-muted);margin-top:2px;">Client: Acme Cloud Technologies Inc. (San Francisco, CA)</p>
+                    </div>
+                    <span class="mock-badge badge-paid">Fully Paid · 0% Export GST</span>
+                  </div>
+                  <div class="mock-inv-details">
+                    <div class="mock-line-item">
+                      <span>Full-Stack AI Agent Engineering (160 hrs)</span>
+                      <span>$4,800.00 USD</span>
+                    </div>
+                    <div class="mock-line-item converted">
+                      <span>Dynamic Exchange Rate ($1 = ₹95.20)</span>
+                      <strong>₹4,56,960.00 INR</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mockup-qr-sample">
+                  <div class="mock-qr-badge">Dynamic UPI Payment QR</div>
+                  <div class="mock-qr-box">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=upi://pay?pa=demo@upi&pn=TaxPulse%20Pro&am=456960&cu=INR" alt="UPI QR" class="mock-qr-img">
+                  </div>
+                  <div class="mock-qr-caption">Scan with GPay / PhonePe / Paytm</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FLOATING CARDS -->
+          <div class="hero-float-card float-left-top">
+            <div class="float-icon">💰</div>
+            <div>
+              <strong>$3,500 USD Paid</strong>
+              <span>Auto-converted to ₹3,33,200 INR</span>
+            </div>
+          </div>
+
+          <div class="hero-float-card float-right-top">
+            <div class="float-icon">🏛️</div>
+            <div>
+              <strong>Section 44ADA Active</strong>
+              <span class="text-emerald">₹3.74L Tax Saved Legally</span>
+            </div>
+          </div>
+
+          <div class="hero-float-card float-left-bottom">
+            <div class="float-icon">✨</div>
+            <div>
+              <strong>AI Auto-Categorized</strong>
+              <span>"AWS Cluster" → Software (98%)</span>
+            </div>
+          </div>
+
+          <div class="hero-float-card float-right-bottom">
+            <div class="float-icon">📱</div>
+            <div>
+              <strong>UPI QR Generated</strong>
+              <span>Zero gateway fee · Instant settlement</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVE TAX SAVINGS CALCULATOR (INTERACTIVE ENGINE) -->
+    <section id="calculator" class="landing-calculator-section">
+      <div class="landing-container">
+        <div class="section-header-center">
+          <div class="section-kicker">🧮 INTERACTIVE SIMULATION TOOL</div>
+          <h2 class="section-heading">Calculate Your Section 44ADA Tax Savings</h2>
+          <p class="section-desc">
+            Under Section 44ADA of the Income Tax Act, eligible IT professionals, software engineers, and digital consultants only declare 50% of gross receipts as taxable income. Slide your revenue to see your tax relief under the FY 2026–27 New Tax Regime.
+          </p>
+        </div>
+
+        <div class="calc-card">
+          <div class="calc-top-row">
+            <div class="calc-input-block">
+              <label for="calcRevenueSlider" class="calc-label">
+                <span>Annual Gross Professional Receipts</span>
+                <span id="calcDisplayRevenue" class="calc-highlight-val">₹24,00,000</span>
+              </label>
+              
+              <div class="calc-slider-wrapper">
+                <input type="range" id="calcRevenueSlider" min="1000000" max="7500000" step="50000" value="2400000" class="calc-slider">
+                <div class="slider-marks">
+                  <span>₹10 Lakhs</span>
+                  <span>₹25 Lakhs</span>
+                  <span>₹50 Lakhs</span>
+                  <span>₹75 Lakhs (Ceiling)</span>
+                </div>
+              </div>
+
+              <div class="calc-preset-pills">
+                <span class="preset-label">Quick Presets:</span>
+                <button type="button" class="preset-btn" data-value="1500000">₹15 Lakhs</button>
+                <button type="button" class="preset-btn active" data-value="2400000">₹24 Lakhs (Max 87A Rebate)</button>
+                <button type="button" class="preset-btn" data-value="4000000">₹40 Lakhs</button>
+                <button type="button" class="preset-btn" data-value="7500000">₹75 Lakhs (Max Ceiling)</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- COMPARISON RESULTS GRID -->
+          <div class="calc-results-grid">
+            <div class="calc-result-box normal-regime">
+              <div class="result-header">
+                <span class="result-title">Without Section 44ADA</span>
+                <span class="chip-sm chip-danger">Normal Tax Regime</span>
+              </div>
+              <div class="result-numbers">
+                <div class="res-row">
+                  <span>Taxable Income:</span>
+                  <strong id="calcNormalTaxable">₹24,00,000</strong>
+                </div>
+                <div class="res-row">
+                  <span>Est. Income Tax Liability:</span>
+                  <strong id="calcNormalTax" class="text-rose">₹3,74,400</strong>
+                </div>
+                <div class="res-row">
+                  <span>Effective Tax Rate:</span>
+                  <span id="calcNormalRate">15.6%</span>
+                </div>
+              </div>
+              <p class="calc-explainer">Full 100% of receipts are subject to standard progressive slabs.</p>
+            </div>
+
+            <div class="calc-result-box presumptive-scheme">
+              <div class="result-header">
+                <span class="result-title">With Section 44ADA</span>
+                <span class="chip-sm chip-success">TaxPulse Pro Engine</span>
+              </div>
+              <div class="result-numbers">
+                <div class="res-row">
+                  <span>Declared Profit (50%):</span>
+                  <strong id="calc44ADATaxable" class="text-emerald">₹12,00,000</strong>
+                </div>
+                <div class="res-row">
+                  <span>Tax Payable (after Sec 87A):</span>
+                  <strong id="calc44ADATax" class="text-emerald">₹0</strong>
+                </div>
+                <div class="res-row">
+                  <span>Effective Tax Rate:</span>
+                  <span id="calc44ADARate" class="text-emerald">0.0%</span>
+                </div>
+              </div>
+              <p class="calc-explainer" id="calc87ANote">✅ 100% full tax rebate applied under Section 87A!</p>
+            </div>
+          </div>
+
+          <!-- SAVINGS BANNER -->
+          <div class="calc-savings-banner">
+            <div class="savings-content">
+              <span class="savings-badge">💰 YOUR ESTIMATED ANNUAL TAX SAVINGS</span>
+              <div class="savings-value-row">
+                <span id="calcTaxSavings" class="savings-number">₹3,74,400</span>
+                <span id="calcPercentSaved" class="savings-percent">100% Tax Cut</span>
+              </div>
+              <p id="calcSavingsDesc" class="savings-desc">
+                By declaring presumptive income under Section 44ADA, you keep ₹3,74,400 in your bank account every year instead of sending it to the tax department!
+              </p>
+            </div>
+            <button id="btnCalcCTA" class="btn-gradient btn-calc-cta">
+              Claim These Savings in TaxPulse Pro →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BENTO FEATURES GRID -->
+    <section id="features" class="landing-features-section">
+      <div class="landing-container">
+        <div class="section-header-center">
+          <div class="section-kicker">⚡ POWERFUL FINTECH CAPABILITIES</div>
+          <h2 class="section-heading">Everything Independent Contractors Need</h2>
+          <p class="section-desc">
+            Engineered specifically to solve the friction of international client invoicing, Indian GST laws, Section 44ADA compliance, and paper expense tracking.
+          </p>
+        </div>
+
+        <div class="bento-grid">
+          <!-- BENTO 1: Multi-Currency (Wide) -->
+          <div class="bento-card bento-wide">
+            <div class="bento-badge">GLOBAL INVOICING</div>
+            <h3 class="bento-title">Multi-Currency Invoicing &amp; 0% Export GST</h3>
+            <p class="bento-desc">
+              Bill clients worldwide in USD, EUR, GBP, AED, CAD, and SGD. The engine automatically converts them to INR at live rates and distinguishes 0% Zero-Rated Export of Services from 18% Domestic Indian GST.
+            </p>
+            <div class="bento-rates-pills">
+              <span class="rate-pill">🇺🇸 USD $1 = ₹95.20</span>
+              <span class="rate-pill">🇪🇺 EUR €1 = ₹103.50</span>
+              <span class="rate-pill">🇬🇧 GBP £1 = ₹121.80</span>
+              <span class="rate-pill">🇦🇪 AED 1 = ₹25.92</span>
+              <span class="rate-pill">🇸🇬 SGD 1 = ₹71.40</span>
+            </div>
+          </div>
+
+          <!-- BENTO 2: Dynamic UPI QR -->
+          <div class="bento-card">
+            <div class="bento-badge">DOMESTIC PAYMENTS</div>
+            <h3 class="bento-title">Dynamic UPI Payment QR Codes</h3>
+            <p class="bento-desc">
+              Generate an on-the-fly UPI QR code right on your invoices. Indian clients scan directly with GPay, PhonePe, or Paytm for instant bank deposits with zero payment gateway processing cuts.
+            </p>
+            <div class="bento-icon-visual">📱 UPI QR Ready</div>
+          </div>
+
+          <!-- BENTO 3: AI Expense Categorizer -->
+          <div class="bento-card">
+            <div class="bento-badge">AI AUTOMATION</div>
+            <h3 class="bento-title">Smart AI Expense Classifier</h3>
+            <p class="bento-desc">
+              Powered by an NLP heuristic engine that parses descriptions (e.g. <em>"Figma subscription"</em> or <em>"Client dinner"</em>) and maps them to deductible tax categories with instant confidence scores.
+            </p>
+            <div class="bento-icon-visual">✨ 98% AI Match</div>
+          </div>
+
+          <!-- BENTO 4: Multer Cloud Receipts -->
+          <div class="bento-card">
+            <div class="bento-badge">AUDIT READINESS</div>
+            <h3 class="bento-title">Multer Bill &amp; Receipt Storage</h3>
+            <p class="bento-desc">
+              Attach receipts, PDF invoices, and paper bills directly to business expense records. Open documents in an interactive lightbox viewer anytime for CA audit verification.
+            </p>
+            <div class="bento-icon-visual">🧾 Cloud Vault</div>
+          </div>
+
+          <!-- BENTO 5: Client Risk Intelligence -->
+          <div class="bento-card">
+            <div class="bento-badge">RISK MITIGATION</div>
+            <h3 class="bento-title">Client Payment Reliability Score</h3>
+            <p class="bento-desc">
+              Evaluates payment terms, overdue history, and settlement punctuality to compute a client credit risk score (0–100) before you commit to large deliverables.
+            </p>
+            <div class="bento-icon-visual">🛡️ Credit Risk 94/100</div>
+          </div>
+
+          <!-- BENTO 6: Real-Time WebSockets -->
+          <div class="bento-card bento-wide">
+            <div class="bento-badge">REAL-TIME ARCHITECTURE</div>
+            <h3 class="bento-title">Live WebSocket Sync with Socket.IO &amp; 1-Click CA Export</h3>
+            <p class="bento-desc">
+              Multi-device updates in real time whenever an invoice is paid or logged. Plus, export clean audit-ready spreadsheets (CSV) with one click to hand over to your Chartered Accountant at tax filing season.
+            </p>
+            <div class="bento-tags-row">
+              <span class="tech-tag">⚡ Socket.IO</span>
+              <span class="tech-tag">☁️ MongoDB Atlas</span>
+              <span class="tech-tag">📥 1-Click CA CSV Export</span>
+              <span class="tech-tag">📄 High-Res Studio PDF</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS (3 STEPS) -->
+    <section id="how-it-works" class="landing-workflow-section">
+      <div class="landing-container">
+        <div class="section-header-center">
+          <div class="section-kicker">🔄 SIMPLE 3-STEP WORKFLOW</div>
+          <h2 class="section-heading">How TaxPulse Pro Works</h2>
+          <p class="section-desc">Streamline your freelance finances from bill creation to tax filing in minutes.</p>
+        </div>
+
+        <div class="workflow-steps-grid">
+          <div class="step-card">
+            <div class="step-number">01</div>
+            <h4>Configure Profile &amp; Banking</h4>
+            <p>Enter your professional trade name, base country, bank wire details, and UPI ID to generate branded invoices with QR codes.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">02</div>
+            <h4>Bill Clients in Any Currency</h4>
+            <p>Add client details, line items, and generate studio-grade PDF invoices with automated zero-rated export GST or 18% domestic tax.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">03</div>
+            <h4>Simulate 44ADA Savings &amp; Export</h4>
+            <p>Track your ₹75L presumptive turnover ceiling in real-time, log expenses with AI, and download complete reports for your CA.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- THE OLD WAY VS TAXPULSE PRO -->
+    <section id="comparison" class="landing-comparison-section">
+      <div class="landing-container">
+        <div class="section-header-center">
+          <div class="section-kicker">⚖️ THE MODERN UPGRADE</div>
+          <h2 class="section-heading">The Old Freelancer Way vs TaxPulse Pro</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Capability</th>
+                <th class="col-old">Manual Spreadsheets &amp; Old Tools</th>
+                <th class="col-new">⚡ TaxPulse Pro</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Foreign Invoicing</strong></td>
+                <td class="text-muted">Manual currency math; messy export GST rules</td>
+                <td class="text-emerald"><strong>Automated 7-currency rates &amp; 0% Export GST</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Domestic Invoicing</strong></td>
+                <td class="text-muted">Client delayed bank transfers &amp; manual IFSC entries</td>
+                <td class="text-emerald"><strong>Instant dynamic UPI QR code on invoice</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Section 44ADA Tax</strong></td>
+                <td class="text-muted">Uncertainty over 50% limit, late CA panic</td>
+                <td class="text-emerald"><strong>Live real-time 44ADA savings simulator</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Receipt Storage</strong></td>
+                <td class="text-muted">Lost paper bills &amp; scattered WhatsApp images</td>
+                <td class="text-emerald"><strong>Multer cloud document vault with viewer</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Expense Categorization</strong></td>
+                <td class="text-muted">Tedious manual sorting at tax season</td>
+                <td class="text-emerald"><strong>Instant AI NLP auto-classification</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Client Reliability</strong></td>
+                <td class="text-muted">Blind trust; frequent unpaid invoices</td>
+                <td class="text-emerald"><strong>Algorithmic client credit risk scoring</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SAAS PRICING MATRIX -->
+    <section id="pricing" class="landing-pricing-section">
+      <div class="landing-container">
+        <div class="section-header-center">
+          <div class="section-kicker">💳 PREDICTABLE COMMERCIAL PLANS</div>
+          <h2 class="section-heading">Plans Built for High-Growth Freelancers</h2>
+          <p class="section-desc">Transparent pricing with zero hidden fees. Save 20% with annual billing.</p>
+          
+          <div class="pricing-toggle-wrap">
+            <span class="toggle-label active" id="labelMonthly">Monthly</span>
+            <label class="switch">
+              <input type="checkbox" id="pricingBillingToggle">
+              <span class="slider round"></span>
+            </label>
+            <span class="toggle-label" id="labelYearly">Annual <span class="badge-discount">Save 20%</span></span>
+          </div>
+        </div>
+
+        <div class="pricing-grid">
+          <!-- TIER 1: Solo Starter -->
+          <div class="pricing-card">
+            <div class="pricing-tier">Solo Starter</div>
+            <div class="pricing-price">
+              <span class="currency">₹</span><span class="amount price-val" data-monthly="0" data-yearly="0">0</span>
+              <span class="period">/ month</span>
+            </div>
+            <p class="pricing-desc">For freelance developers and designers just starting out.</p>
+            <ul class="pricing-features">
+              <li>✓ Up to 5 Active Clients</li>
+              <li>✓ Standard INR &amp; USD Invoicing</li>
+              <li>✓ Basic Tax Slabs Overview</li>
+              <li>✓ Printable Studio PDF Invoices</li>
+              <li>✓ Community Support</li>
+            </ul>
+            <button class="btn-outline btn-block btn-pricing" data-tier="Starter">Get Started Free</button>
+          </div>
+
+          <!-- TIER 2: Freelancer Pro (Popular) -->
+          <div class="pricing-card popular">
+            <div class="popular-ribbon">MOST POPULAR</div>
+            <div class="pricing-tier">Freelancer Pro</div>
+            <div class="pricing-price">
+              <span class="currency">₹</span><span class="amount price-val" data-monthly="499" data-yearly="399">499</span>
+              <span class="period">/ month</span>
+            </div>
+            <p class="pricing-desc">Full financial operating system for serious independent contractors.</p>
+            <ul class="pricing-features">
+              <li>✓ <strong>Unlimited</strong> Clients &amp; Invoices</li>
+              <li>✓ <strong>7 Global Currencies</strong> with Live FX Auto-Conversion</li>
+              <li>✓ <strong>0% Export GST</strong> &amp; 18% Domestic Logic</li>
+              <li>✓ <strong>Dynamic UPI Payment QR Codes</strong></li>
+              <li>✓ <strong>Section 44ADA Presumptive Tax Simulator</strong></li>
+              <li>✓ <strong>AI Expense Auto-Classifier</strong></li>
+              <li>✓ <strong>Multer Bill Vault</strong> (JPG, PNG, PDF receipts)</li>
+              <li>✓ <strong>1-Click CA Financial Export</strong> (CSV &amp; PDF)</li>
+              <li>✓ <strong>Real-Time Socket.IO Multi-Device Sync</strong></li>
+            </ul>
+            <button class="btn-gradient btn-block btn-pricing" data-tier="Pro">Start 14-Day Free Trial →</button>
+          </div>
+
+          <!-- TIER 3: Studio / Agency -->
+          <div class="pricing-card">
+            <div class="pricing-tier">Studio / Agency</div>
+            <div class="pricing-price">
+              <span class="currency">₹</span><span class="amount price-val" data-monthly="1499" data-yearly="1199">1,499</span>
+              <span class="period">/ month</span>
+            </div>
+            <p class="pricing-desc">For high-billing consultants, boutique agencies, and multi-partner teams.</p>
+            <ul class="pricing-features">
+              <li>✓ Everything in Freelancer Pro</li>
+              <li>✓ <strong>Client Payment Risk &amp; Reliability AI</strong></li>
+              <li>✓ Custom Studio Letterhead &amp; Watermarks</li>
+              <li>✓ Priority MongoDB Atlas Cloud Clustering</li>
+              <li>✓ Direct Chartered Accountant (CA) Audit Support</li>
+            </ul>
+            <button class="btn-outline btn-block btn-pricing" data-tier="Agency">Launch Studio Workspace</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="landing-testimonials-section">
+      <div class="landing-container">
+        <div class="section-header-center">
+          <div class="section-kicker">💬 PROVEN BY PROFESSIONALS</div>
+          <h2 class="section-heading">Loved by Independent Contractors</h2>
+        </div>
+
+        <div class="testimonials-grid">
+          <div class="testimonial-card">
+            <div class="rating-stars">★★★★★</div>
+            <p class="testimonial-text">
+              "Section 44ADA saved me over ₹3.4 Lakhs in taxes this financial year! The live calculation engine made it crystal clear how much to declare, and my clients love paying via the UPI QR code on the invoice."
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">AR</div>
+              <div>
+                <strong>Aarav Sharma</strong>
+                <span>Senior Cloud Architect &amp; AI Consultant</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card">
+            <div class="rating-stars">★★★★★</div>
+            <p class="testimonial-text">
+              "Invoicing US and European clients in USD/EUR while getting clean 0% export GST compliant PDFs was always a nightmare. TaxPulse Pro does it in seconds with live exchange rates."
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">PR</div>
+              <div>
+                <strong>Priya Roy</strong>
+                <span>Product Designer (US &amp; EU Clients)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card">
+            <div class="rating-stars">★★★★★</div>
+            <p class="testimonial-text">
+              "The Multer receipt storage combined with the AI categorization saves me 10+ hours every month. At year-end, I simply exported the CSV and handed it to my CA. He was thrilled!"
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">VK</div>
+              <div>
+                <strong>Vikram Kulkarni</strong>
+                <span>Full-Stack Engineering Contractor</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ ACCORDION -->
+    <section id="faq" class="landing-faq-section">
+      <div class="landing-container">
+        <div class="section-header-center">
+          <div class="section-kicker">❓ FREQUENTLY ASKED QUESTIONS</div>
+          <h2 class="section-heading">Got Questions? We Have Answers.</h2>
+        </div>
+
+        <div class="faq-accordion-wrapper">
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>Who is eligible for Section 44ADA Presumptive Taxation in India?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Section 44ADA is available to resident specified professionals including Software Engineers, IT Consultants, Technical Designers, Legal &amp; Medical Consultants, and Accountants whose gross total receipts do not exceed ₹75 Lakhs in a financial year (provided non-cash/digital receipts are 95% or higher; otherwise the limit is ₹50 Lakhs). You declare 50% of your gross receipts as taxable income.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>How do dynamic UPI QR codes work on invoices?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>When you create an invoice for a domestic client, TaxPulse Pro encodes your registered UPI ID and the exact invoice payable amount into a dynamic UPI QR string. When your client scans it with Google Pay, PhonePe, or Paytm, the payment is transferred directly into your bank account with zero intermediary commissions or payment gateway cut.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>How does TaxPulse Pro handle international multi-currency billing?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>You can bill clients in USD, EUR, GBP, AED, CAD, and SGD. The portal automatically computes exchange rates into INR for your financial reporting and applies 0% GST (Zero-Rated Export of Services under LUT) for overseas clients, while maintaining standard 18% GST for Indian clients.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>How does the AI Expense Categorizer work?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Our NLP heuristic categorizer analyzes the item text (e.g. "MacBook Pro M3", "AWS Hosting", "Uber to client office") and maps it to allowable tax deduction buckets (Hardware, Software &amp; Subscriptions, Travel, Office Expenses) with high confidence matching.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>Can I export data for my Chartered Accountant (CA)?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Yes! With one click on the "Export Report (CSV)" button, TaxPulse Pro generates a clean, audit-ready financial spreadsheet with all invoice records, foreign exchange conversions, tax deductions, and categorized business expenses.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA BANNER -->
+    <section class="landing-cta-banner">
+      <div class="landing-container">
+        <div class="cta-banner-card">
+          <div class="cta-glow"></div>
+          <h2>Ready to Take Control of Your Freelance Finances?</h2>
+          <p>Join independent software engineers and tech consultants who save thousands in taxes and hours on billing every month.</p>
+          <div class="cta-banner-actions">
+            <button id="btnBannerGetStarted" class="btn-gradient btn-lg">Launch Free Workspace →</button>
+            <button id="btnBannerSignIn" class="btn-outline btn-lg">Sign In to Existing Account</button>
+          </div>
+          <div class="cta-banner-badges">
+            <span>✓ No credit card required</span>
+            <span>✓ Instant MongoDB Atlas setup</span>
+            <span>✓ Section 44ADA FY 2026–27 compliant</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CORPORATE FOOTER -->
+    <footer class="landing-footer">
+      <div class="landing-container footer-content">
+        <div class="footer-col brand-col">
+          <div class="landing-brand">
+            <span class="landing-brand-icon">⚡</span>
+            <span class="landing-brand-text">TaxPulse <span class="badge-pro">PRO</span></span>
+          </div>
+          <p class="footer-desc">
+            The Financial Operating System for Global Freelancers &amp; Independent Tech Consultants.
+          </p>
+          <div class="footer-status-pill">
+            <span class="pulse-dot"></span>
+            <span>MongoDB Atlas Cluster Live (12ms)</span>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h5>Core Modules</h5>
+          <ul>
+            <li><a href="#features">Multi-Currency Billing</a></li>
+            <li><a href="#calculator">Section 44ADA Simulator</a></li>
+            <li><a href="#features">Dynamic UPI QR Invoicing</a></li>
+            <li><a href="#features">AI Expense Classifier</a></li>
+            <li><a href="#features">Multer Receipt Vault</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Compliance</h5>
+          <ul>
+            <li><a href="#calculator">New Tax Regime (FY 2026–27)</a></li>
+            <li><a href="#calculator">Section 87A Full Rebate</a></li>
+            <li><a href="#calculator">Section 44ADA Limits (₹75L)</a></li>
+            <li><a href="#features">Zero-Rated Export of Services</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Portal</h5>
+          <ul>
+            <li><a href="#" id="footerLinkSignIn">Freelancer Sign In</a></li>
+            <li><a href="#" id="footerLinkSignUp">Create Account</a></li>
+            <li><a href="#pricing">Pricing Plans</a></li>
+            <li><a href="#faq">Frequently Asked Questions</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="landing-container footer-bottom">
+        <p>© 2026 TaxPulse Pro. All rights reserved. Chitkara University CA-2 Backend Engineering Assessment.</p>
+        <p class="footer-compliance">Compliant with Section 44ADA &amp; Indian Income Tax FY 2026–27 Framework.</p>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ========================================================
+       AUTH MODAL OVERLAY (LOGIN / SIGNUP / FORGOT PASSWORD)
+       ======================================================== -->
   <div id="authScreen" class="auth-wrapper">
     <div class="auth-bg-shapes">
       <div class="shape shape-1"></div>
@@ -21,10 +798,11 @@
     </div>
 
     <div class="auth-card">
+      <button id="btnCloseAuth" class="auth-close-btn" type="button" aria-label="Close modal">✕</button>
       <div class="auth-header">
         <div class="auth-logo">⚡</div>
-        <h1>TaxPulse</h1>
-        <p class="auth-subtitle">Freelancer Tax &amp; Invoicing Portal</p>
+        <h1>TaxPulse <span style="font-size:0.9rem;font-weight:700;color:var(--accent-cyan);vertical-align:middle;background:rgba(34,211,238,0.1);padding:2px 8px;border-radius:12px;border:1px solid rgba(34,211,238,0.3);">PRO</span></h1>
+        <p class="auth-subtitle">Freelancer Invoicing &amp; Tax Portal</p>
       </div>
 
       <form id="loginForm">
@@ -39,7 +817,7 @@
         <button type="submit" class="btn-gradient btn-block">Sign In</button>
         <div class="auth-toggle">
           <span id="showForgot">Forgot Password?</span>
-          <span id="showSignup">Create Account</span>
+          <span id="showSignup">Create New Account</span>
         </div>
       </form>
 
@@ -81,7 +859,12 @@
       <div class="sidebar-top">
         <div class="brand-title">
           <span class="brand-icon">⚡</span>
-          <span>TaxPulse</span>
+          <span>TaxPulse <span style="font-size:0.75rem;color:var(--accent-cyan);font-weight:700;">PRO</span></span>
+        </div>
+
+        <div class="cloud-status-badge">
+          <span class="status-dot"></span>
+          <span>MongoDB Atlas Live</span>
         </div>
 
         <nav class="sidebar-nav">
@@ -101,10 +884,13 @@
             <span class="nav-icon">👥</span> Manage Clients
           </button>
           <button class="nav-btn" data-tab="tab-expenses">
-            <span class="nav-icon">🧾</span> Expenses
+            <span class="nav-icon">🧾</span> Expenses &amp; Bills
           </button>
           <button class="nav-btn" data-tab="tab-profile">
-            <span class="nav-icon">👤</span> Edit Profile
+            <span class="nav-icon">👤</span> Settings &amp; Bank
+          </button>
+          <button class="nav-btn nav-btn-landing" id="btnSidebarLanding" type="button" title="View Public Landing Page">
+            <span class="nav-icon">🌐</span> Landing Page
           </button>
         </nav>
       </div>
@@ -113,7 +899,7 @@
         <div class="user-avatar" id="navUserAvatar">U</div>
         <div class="user-info">
           <div id="navUserName" class="user-name">User</div>
-          <div class="user-role">Freelancer Account</div>
+          <div class="user-role" id="navUserRole">Freelance Pro</div>
         </div>
         <button id="btnLogout" class="btn-logout" title="Logout">⏻</button>
       </div>
@@ -121,16 +907,22 @@
 
     <div class="mobile-header">
       <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle menu">☰</button>
-      <span class="mobile-brand">⚡ TaxPulse</span>
+      <span class="mobile-brand">⚡ TaxPulse PRO</span>
     </div>
 
     <main class="main-content">
 
+      <!-- DASHBOARD TAB -->
       <section id="tab-dashboard" class="tab-content active">
         <header class="page-header">
           <div>
-            <h2>Financial Overview</h2>
-            <p class="page-desc">FY 2026–27 · Realized income &amp; progressive tax breakdown</p>
+            <h2>Financial Overview &amp; Tax Engine</h2>
+            <p class="page-desc">FY 2026–27 · Realized income, expenses, and progressive slab breakdown</p>
+          </div>
+          <div style="display:flex;gap:0.75rem;align-items:center;">
+            <button id="btnExportFinancials" class="btn-outline" title="Download spreadsheet of all invoices and expenses">
+              📥 Export Report (CSV)
+            </button>
           </div>
         </header>
 
@@ -151,26 +943,26 @@
             <div class="stat-icon">✨</div>
             <h4>Net After Tax</h4>
             <div class="value" id="dashNetIncome">₹0</div>
-            <span class="stat-note">Take-home estimate</span>
+            <span class="stat-note">Take-home before expenses</span>
           </div>
           <div class="stat-card stat-expense">
             <div class="stat-icon">🧾</div>
             <h4>Business Expenses</h4>
             <div class="value" id="dashTotalExpenses">₹0</div>
-            <span class="stat-note">All logged expenses</span>
+            <span class="stat-note">Logged deductible costs</span>
           </div>
           <div class="stat-card stat-realnet">
             <div class="stat-icon">🏦</div>
-            <h4>Net After Tax &amp; Expenses</h4>
+            <h4>Net Take-Home (Real)</h4>
             <div class="value" id="dashRealNetIncome">₹0</div>
-            <span class="stat-note">True take-home estimate</span>
+            <span class="stat-note">Gross − Tax − Expenses</span>
           </div>
         </div>
 
         <div class="card">
           <div class="card-title-row">
             <h3>Income Tax Slabs Breakdown</h3>
-            <span class="chip">Progressive Engine</span>
+            <span class="chip">New Tax Regime</span>
           </div>
           <p id="rebateNotice" class="rebate-notice" style="display:none;">
             ✅ Full Tax Rebate applied under Section 87A (Taxable Income ≤ ₹12,00,000)
@@ -192,40 +984,40 @@
 
         <div class="card freelancer-tax-card">
           <div class="card-title-row">
-            <h3>Freelancer Tax Benefits</h3>
-            <span class="chip">Invoice Based</span>
+            <h3>Section 44ADA Freelancer Presumptive Scheme</h3>
+            <span class="chip">Tax Saving Engine</span>
           </div>
           <p class="tax-benefit-description">
-            Add invoices to check potential benefits available under India's
-            presumptive taxation scheme for eligible freelancers.
+            Eligible professionals (Software Developers, Designers, Engineers, Consultants) can declare 50% of professional receipts as taxable income under Section 44ADA to save substantial taxes legally.
           </p>
 
           <div class="tax-benefit-settings">
             <div class="form-group">
-              <label for="freelancerProfession">Profession eligibility</label>
+              <label for="freelancerProfession">Specified Profession Status</label>
               <select id="freelancerProfession">
-                <option value="no">Not a specified profession</option>
-                <option value="yes">I am in a specified profession</option>
+                <option value="yes" selected>Yes, I am in a specified profession (IT/Tech/Legal/Consulting)</option>
+                <option value="no">No, general freelance trade</option>
               </select>
             </div>
             <div class="form-group">
               <label for="freelancerCashReceipts">Cash receipts (% of gross receipts)</label>
               <input type="number" id="freelancerCashReceipts" min="0" max="100" step="0.01" value="0">
+              <span class="stat-note">Digital receipts &gt;95% unlocks ₹75 Lakh limit!</span>
             </div>
           </div>
 
           <div id="freelancerTaxEmpty" class="tax-benefit-empty">
             <div class="empty-state-icon">🧾</div>
-            <p>Add an invoice to calculate freelancer tax benefits.</p>
+            <p>Add and record an invoice to simulate your Section 44ADA savings.</p>
           </div>
 
           <div id="freelancerTaxResults" style="display:none;">
             <div class="tax-benefit-highlight">
               <div>
-                <span>Estimated Tax Saving</span>
+                <span>Estimated Tax Saving with Sec 44ADA</span>
                 <strong id="freelancerTaxSaving">₹0</strong>
               </div>
-              <span id="freelancer44ADAStatus" class="badge badge-unpaid">Not Eligible</span>
+              <span id="freelancer44ADAStatus" class="badge badge-paid">Eligible</span>
             </div>
 
             <div class="tax-benefit-grid">
@@ -234,11 +1026,11 @@
                 <strong id="freelancerInvoiceCount">0</strong>
               </div>
               <div class="tax-benefit-item">
-                <span>Realized Professional Receipts</span>
+                <span>Gross Realized Receipts</span>
                 <strong id="freelancerGrossReceipts">₹0</strong>
               </div>
               <div class="tax-benefit-item">
-                <span>44ADA Receipt Limit</span>
+                <span>44ADA Turnover Ceiling</span>
                 <strong id="freelancer44ADALimit">₹0</strong>
               </div>
               <div class="tax-benefit-item">
@@ -249,94 +1041,184 @@
 
             <div class="tax-benefit-comparison">
               <div>
-                <span>Tax without 44ADA</span>
+                <span>Tax under Normal Regime</span>
                 <strong id="freelancerTaxWithout">₹0</strong>
               </div>
               <div>
-                <span>Tax with 44ADA</span>
+                <span>Tax under Section 44ADA</span>
                 <strong id="freelancerTaxWith">₹0</strong>
               </div>
             </div>
 
             <p id="freelancerTaxMessage" class="rebate-notice"></p>
-            <p class="tax-benefit-disclaimer">
-              This is an estimate for informational purposes. Actual eligibility and
-              tax liability depend on the taxpayer's complete circumstances.
-            </p>
           </div>
         </div>
       </section>
 
-
+      <!-- ANALYTICS TAB -->
       <section id="tab-analytics" class="tab-content">
         <header class="page-header">
           <div>
-            <h2>Revenue Analytics</h2>
-            <p class="page-desc">Visualize your income, clients, and invoice health</p>
+            <h2>Financial Intelligence &amp; Analytics</h2>
+            <p class="page-desc">Visualize income velocity, client concentration, currency diversification, and cashflow runway</p>
+          </div>
+          <div class="filter-pills" id="analyticsTimeframePills">
+            <button class="pill" data-months="3">3 Months</button>
+            <button class="pill" data-months="6">6 Months</button>
+            <button class="pill active" data-months="12">12 Months</button>
+            <button class="pill" data-months="all">All Time</button>
           </div>
         </header>
 
+        <!-- KPI SUMMARY ROW -->
+        <div class="stats-grid analytics-kpi-grid">
+          <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <h4>Collection Realization</h4>
+            <div class="value text-emerald" id="kpiRealizationRate">0%</div>
+            <span class="stat-note" id="kpiRealizationSub">₹0 collected of ₹0 billed</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📑</div>
+            <h4>Avg. Invoice Size</h4>
+            <div class="value" id="kpiAvgInvoice">₹0</div>
+            <span class="stat-note" id="kpiAvgInvoiceSub">Across 0 invoices</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <h4>Net Profit Margin</h4>
+            <div class="value text-cyan" id="kpiProfitMargin">0%</div>
+            <span class="stat-note" id="kpiProfitMarginSub">Gross minus expenses</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🌐</div>
+            <h4>Active Currencies</h4>
+            <div class="value text-amber" id="kpiCurrencies">1</div>
+            <span class="stat-note" id="kpiCurrenciesSub">INR Domestic</span>
+          </div>
+        </div>
+
+        <!-- AI FINANCIAL INTELLIGENCE INSIGHTS -->
+        <div class="card analytics-insights-card">
+          <div class="card-title-row">
+            <h3>🤖 AI Financial Health &amp; Risk Insights</h3>
+            <span class="chip">Live Heuristics</span>
+          </div>
+          <div class="insights-grid">
+            <div class="insight-item" id="insightConcentration">
+              <div class="insight-header">
+                <span class="insight-badge badge-info">Client Concentration</span>
+                <span class="insight-status" id="statusConcentration">Analyzing</span>
+              </div>
+              <p class="insight-text" id="insightConcentrationText">Analyzing client revenue distribution...</p>
+            </div>
+            <div class="insight-item" id="insightVelocity">
+              <div class="insight-header">
+                <span class="insight-badge badge-success">Collection Velocity</span>
+                <span class="insight-status" id="statusVelocity">Analyzing</span>
+              </div>
+              <p class="insight-text" id="insightVelocityText">Analyzing payment turnaround and punctuality...</p>
+            </div>
+            <div class="insight-item" id="insight44ADA">
+              <div class="insight-header">
+                <span class="insight-badge badge-warning">Sec 44ADA Turnover</span>
+                <span class="insight-status" id="status44ADA">Tracking</span>
+              </div>
+              <p class="insight-text" id="insight44ADAText">Tracking ₹75L presumptive limit ceiling...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAIN CHART: MONTHLY REVENUE & EXPENSES & NET PROFIT -->
         <div class="card analytics-card">
           <div class="card-title-row">
-            <h3>📈 Monthly Revenue Trend</h3>
-            <span class="chip">Last 12 Months</span>
+            <h3>📈 Monthly Cashflow Velocity (Revenue vs Expenses vs Profit)</h3>
+            <span class="chip" id="chartMonthlyChip">Last 12 Months</span>
           </div>
-          <p class="page-desc" style="margin-bottom:1.25rem;">
-            INR revenue collected per month based on invoice paid amounts.
-          </p>
-          <div class="chart-container chart-container-bar">
+          <div class="chart-container chart-container-bar" style="height:320px;">
             <canvas id="chartMonthlyRevenue"></canvas>
           </div>
         </div>
 
+        <!-- TWO COLUMN CHARTS: CURRENCY BREAKDOWN + INVOICE PIPELINE -->
         <div class="analytics-grid">
           <div class="card analytics-card">
             <div class="card-title-row">
-              <h3>🥧 Revenue by Client</h3>
-              <span class="chip">Top 8</span>
+              <h3>🌍 Revenue Share by Currency</h3>
+              <span class="chip">FX Exposure</span>
             </div>
-            <p class="page-desc" style="margin-bottom:1.25rem;">
-              Share of total collected revenue per client.
-            </p>
             <div class="chart-container chart-container-donut">
-              <canvas id="chartClientRevenue"></canvas>
+              <canvas id="chartCurrencyShare"></canvas>
             </div>
           </div>
 
           <div class="card analytics-card">
             <div class="card-title-row">
-              <h3>📊 Invoice Status</h3>
-              <span class="chip">All Time</span>
+              <h3>📊 Invoice Pipeline &amp; Settlement Health</h3>
+              <span class="chip">Payment Status</span>
             </div>
-            <p class="page-desc" style="margin-bottom:1.25rem;">
-              Distribution of Paid, Partially Paid, and Unpaid invoices.
-            </p>
             <div class="chart-container chart-container-donut">
               <canvas id="chartInvoiceStatus"></canvas>
             </div>
           </div>
         </div>
 
-        <div class="card analytics-card">
-          <div class="card-title-row">
-            <h3>💹 Revenue vs Expenses</h3>
-            <span class="chip">Last 6 Months</span>
+        <!-- TWO COLUMN CHARTS: TOP CLIENT CONCENTRATION + EXPENSE CATEGORIES -->
+        <div class="analytics-grid">
+          <div class="card analytics-card">
+            <div class="card-title-row">
+              <h3>👥 Top Client Revenue Concentration</h3>
+              <span class="chip">Lifetime Value (INR)</span>
+            </div>
+            <div class="chart-container chart-container-donut" style="height:280px;">
+              <canvas id="chartClientRevenue"></canvas>
+            </div>
           </div>
-          <p class="page-desc" style="margin-bottom:1.25rem;">
-            Compare monthly revenue collected against expenses logged.
-          </p>
-          <div class="chart-container chart-container-bar">
-            <canvas id="chartExpenseRevenue"></canvas>
+
+          <div class="card analytics-card">
+            <div class="card-title-row">
+              <h3>🧾 Business Expenses by Deductible Category</h3>
+              <span class="chip">Tax Deductions</span>
+            </div>
+            <div class="chart-container chart-container-donut" style="height:280px;">
+              <canvas id="chartExpenseCategories"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- CLIENT FINANCIAL LEADERBOARD TABLE -->
+        <div class="card">
+          <div class="card-title-row">
+            <h3>🏆 Client Financial Performance Leaderboard</h3>
+            <span class="chip">Ranked by Realized Income</span>
+          </div>
+          <div class="table-wrap">
+            <table class="analytics-leaderboard-table">
+              <thead>
+                <tr>
+                  <th>Client</th>
+                  <th>Primary Currency</th>
+                  <th>Invoices</th>
+                  <th>Total Billed</th>
+                  <th>Realized (Paid)</th>
+                  <th>Realization Rate</th>
+                  <th>Payment Punctuality</th>
+                </tr>
+              </thead>
+              <tbody id="analyticsLeaderboardBody">
+                <tr><td colspan="7" class="text-center text-muted">No client data available yet.</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
 
-
+      <!-- CREATE INVOICE TAB -->
       <section id="tab-create-invoice" class="tab-content">
         <header class="page-header">
           <div>
-            <h2>Generate New Invoice</h2>
-            <p class="page-desc">Add line items, set dates, and auto-calculate GST &amp; totals</p>
+            <h2>Studio Invoice Builder</h2>
+            <p class="page-desc">Add line items, configure international currencies, and generate UPI QR code ready invoices</p>
           </div>
         </header>
 
@@ -351,7 +1233,7 @@
               <input type="date" id="invoiceDate">
             </div>
             <div class="form-group">
-              <label for="dueDate">Due Date</label>
+              <label for="dueDate">Payment Due Date</label>
               <input type="date" id="dueDate">
             </div>
             <div class="form-group">
@@ -363,7 +1245,7 @@
               </select>
             </div>
             <div class="form-group" id="invoiceInitialPaidGroup" style="display:none;">
-              <label for="invoiceInitialPaid">Amount Received So Far</label>
+              <label for="invoiceInitialPaid">Amount Received (in client currency)</label>
               <input type="number" id="invoiceInitialPaid" placeholder="0.00" min="0" step="0.01">
             </div>
           </div>
@@ -372,9 +1254,9 @@
             <h4>Line Items</h4>
           </div>
           <div class="line-items-header">
-            <span>Description</span>
-            <span>Qty</span>
-            <span>Rate</span>
+            <span>Service Description</span>
+            <span>Qty / Hrs</span>
+            <span>Unit Rate</span>
             <span></span>
           </div>
           <div id="lineItemsContainer"></div>
@@ -382,38 +1264,49 @@
 
           <div id="invoicePreview" class="invoice-preview">
             <div class="preview-row"><span>Subtotal</span> <span id="previewSubtotal">—</span></div>
-            <div class="preview-row"><span>GST / Tax</span> <span id="previewGST">—</span></div>
-            <div class="preview-row preview-total"><span>Total Due</span><span id="previewTotal">—</span></div>
+            <div class="preview-row"><span>GST / Tax Rate</span> <span id="previewGST">—</span></div>
+            <div class="preview-row preview-total"><span>Total Amount Due</span><span id="previewTotal">—</span></div>
           </div>
 
           <div class="form-group">
-            <label for="invoiceNotes">Notes / Payment Terms</label>
+            <label for="invoiceNotes">Invoice Notes &amp; Wire Instructions</label>
             <textarea id="invoiceNotes" rows="2"
-              placeholder="Payment due within 15 days via Wire Transfer / UPI…"></textarea>
+              placeholder="Payment due within 15 days via UPI / Bank Transfer / International Wire…"></textarea>
           </div>
 
           <button type="submit" class="btn-gradient">Generate &amp; Save Invoice</button>
         </form>
       </section>
 
-
+      <!-- ALL INVOICES TAB -->
       <section id="tab-invoices" class="tab-content">
         <header class="page-header">
           <div>
-            <h2>All Generated Invoices</h2>
-            <p class="page-desc">Track payment status and print invoices</p>
+            <h2>Invoice Ledger</h2>
+            <p class="page-desc">Track payment status, generate QR-code invoices, and copy client portals</p>
           </div>
           <span id="invoiceCount" class="chip">0 invoices</span>
         </header>
+
+        <div class="invoices-filter-bar">
+          <div class="filter-pills" id="invoiceFilterPills">
+            <button class="pill active" data-filter="All">All Invoices</button>
+            <button class="pill" data-filter="Unpaid">Unpaid</button>
+            <button class="pill" data-filter="Partially Paid">Partially Paid</button>
+            <button class="pill" data-filter="Fully Paid">Fully Paid</button>
+          </div>
+          <input type="text" id="invoiceSearchInput" class="filter-search-input" placeholder="🔍 Search invoices...">
+        </div>
+
         <div id="invoicesList"></div>
       </section>
 
-
+      <!-- CLIENTS TAB -->
       <section id="tab-clients" class="tab-content">
         <header class="page-header">
           <div>
-            <h2>Client Directory</h2>
-            <p class="page-desc">Manage billing contacts and currencies</p>
+            <h2>Client Management Directory</h2>
+            <p class="page-desc">Manage client profiles, currencies, and analyze client risk with AI</p>
           </div>
         </header>
 
@@ -421,8 +1314,12 @@
           <h3 id="clientFormTitle" class="card-heading">Add New Client</h3>
           <div class="form-grid">
             <div class="form-group">
-              <label for="clientName">Client / Company Name</label>
-              <input type="text" id="clientName" required placeholder="Acme Corp">
+              <label for="clientName">Client Contact Name</label>
+              <input type="text" id="clientName" required placeholder="Alex Rivera">
+            </div>
+            <div class="form-group">
+              <label for="clientCompany">Company / Client Organization</label>
+              <input type="text" id="clientCompany" placeholder="e.g. Acme Tech Corp">
             </div>
             <div class="form-group">
               <label for="clientEmail">Email Address</label>
@@ -440,6 +1337,7 @@
                 <option value="EUR">EUR (€)</option>
                 <option value="GBP">GBP (£)</option>
                 <option value="AED">AED</option>
+                <option value="CAD">CAD (C$)</option>
                 <option value="SGD">SGD (S$)</option>
               </select>
             </div>
@@ -454,20 +1352,19 @@
           </div>
           <div class="form-actions">
             <button type="submit" id="btnSaveClient" class="btn-gradient">Save Client</button>
-            <button type="button" id="btnCancelClientEdit" class="btn-outline" style="display:none;">Cancel
-              Edit</button>
+            <button type="button" id="btnCancelClientEdit" class="btn-outline" style="display:none;">Cancel Edit</button>
           </div>
         </form>
 
         <div id="clientsList"></div>
       </section>
 
-
+      <!-- EXPENSES TAB -->
       <section id="tab-expenses" class="tab-content">
         <header class="page-header">
           <div>
-            <h2>Business Expenses</h2>
-            <p class="page-desc">Log costs to see your true take-home income, net of tax and expenses</p>
+            <h2>Business Expenses &amp; Bills</h2>
+            <p class="page-desc">Track deductible business costs with Multer receipt uploads and AI auto-categorization</p>
           </div>
           <span id="expenseCount" class="chip">0 expenses</span>
         </header>
@@ -477,7 +1374,7 @@
             <div class="stat-icon">🧾</div>
             <h4>Total Logged Expenses</h4>
             <div class="value" id="expTotalAmount">₹0</div>
-            <span class="stat-note">All-time, all categories</span>
+            <span class="stat-note">All-time business deductions</span>
           </div>
           <div class="stat-card" id="expTopCategoryCard">
             <div class="stat-icon">🏷️</div>
@@ -488,11 +1385,14 @@
         </div>
 
         <form id="expenseForm" class="card">
-          <h3 id="expenseFormTitle" class="card-heading">Add Expense</h3>
+          <h3 id="expenseFormTitle" class="card-heading">Add Business Expense</h3>
           <div class="form-grid">
             <div class="form-group form-group-full">
-              <label for="expenseDescription">Description</label>
-              <input type="text" id="expenseDescription" required placeholder="e.g. Adobe Creative Cloud subscription">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.25rem;">
+                <label for="expenseDescription" style="margin:0;">Description</label>
+                <button type="button" id="btnAiCategorize" class="btn-ai-sparkle">✨ AI Auto-Categorize</button>
+              </div>
+              <input type="text" id="expenseDescription" required placeholder="e.g. AWS cloud hosting, MacBook charger, Coworking desk">
             </div>
             <div class="form-group">
               <label for="expenseCategory">Category</label>
@@ -500,28 +1400,31 @@
             </div>
             <div class="form-group">
               <label for="expenseAmount">Amount (₹)</label>
-              <input type="number" id="expenseAmount" required min="0" step="0.01" placeholder="0.00">
+              <input type="number" id="expenseAmount" required min="0.01" step="0.01" placeholder="0.00">
             </div>
             <div class="form-group">
-              <label for="expenseDate">Date</label>
+              <label for="expenseDate">Expense Date</label>
               <input type="date" id="expenseDate">
+            </div>
+            <div class="form-group form-group-full">
+              <label for="expenseReceipt">Attach Receipt / Bill (Multer Storage - JPG, PNG, PDF)</label>
+              <input type="file" id="expenseReceipt" accept="image/jpeg,image/png,image/webp,application/pdf">
             </div>
           </div>
           <div class="form-group">
             <label for="expenseNotes">Notes (optional)</label>
-            <input type="text" id="expenseNotes" placeholder="Any extra detail…">
+            <input type="text" id="expenseNotes" placeholder="Vendor or payment reference…">
           </div>
           <div class="form-actions">
-            <button type="submit" id="btnSaveExpense" class="btn-gradient">Save Expense</button>
-            <button type="button" id="btnCancelExpenseEdit" class="btn-outline" style="display:none;">Cancel
-              Edit</button>
+            <button type="submit" id="btnSaveExpense" class="btn-gradient">Save Expense with Receipt</button>
+            <button type="button" id="btnCancelExpenseEdit" class="btn-outline" style="display:none;">Cancel Edit</button>
           </div>
         </form>
 
         <div class="card" id="expenseCategoryCard" style="display:none;">
           <div class="card-title-row">
-            <h3>Spend by Category</h3>
-            <span class="chip">Breakdown</span>
+            <h3>Spend by Category Breakdown</h3>
+            <span class="chip">Audit Ready</span>
           </div>
           <div id="expenseCategoryBars"></div>
         </div>
@@ -529,12 +1432,12 @@
         <div id="expensesList"></div>
       </section>
 
-
+      <!-- PROFILE & SETTINGS TAB -->
       <section id="tab-profile" class="tab-content">
         <header class="page-header">
           <div>
-            <h2>Edit Profile</h2>
-            <p class="page-desc">Update your account details and business information</p>
+            <h2>Freelancer Profile &amp; Banking Details</h2>
+            <p class="page-desc">Configure business branding, UPI ID for QR code generation, and wire transfer info</p>
           </div>
         </header>
 
@@ -548,7 +1451,17 @@
           </div>
 
           <div class="section-divider">
-            <h4>Personal Information</h4>
+            <h4>Branding &amp; Business Logo (Multer Upload)</h4>
+          </div>
+          <div class="form-grid">
+            <div class="form-group form-group-full">
+              <label for="profileLogo">Upload Business Logo (Shown on generated PDF invoices)</label>
+              <input type="file" id="profileLogo" accept="image/*">
+            </div>
+          </div>
+
+          <div class="section-divider">
+            <h4>Personal &amp; Trade Details</h4>
           </div>
           <div class="form-grid">
             <div class="form-group">
@@ -560,39 +1473,66 @@
               <input type="email" id="profileEmail" required placeholder="alex@freelance.com">
             </div>
             <div class="form-group">
+              <label for="profileBusinessName">Business / Agency Trade Name</label>
+              <input type="text" id="profileBusinessName" placeholder="Rivera Solutions">
+            </div>
+            <div class="form-group">
               <label for="profilePhone">Phone Number</label>
               <input type="tel" id="profilePhone" placeholder="+91 98765 43210">
             </div>
             <div class="form-group">
-              <label for="profileCountry">Country</label>
+              <label for="profileCountry">Base Country</label>
               <select id="profileCountry" required></select>
             </div>
             <div class="form-group form-group-full">
-              <label for="profileAddress">Business Address</label>
-              <input type="text" id="profileAddress" placeholder="Your registered business address">
-            </div>
-            <div class="form-group form-group-full">
-              <label for="profileBusinessName">Business / Trade Name</label>
-              <input type="text" id="profileBusinessName" placeholder="Optional — shown on invoices">
+              <label for="profileAddress">Business Registered Address</label>
+              <input type="text" id="profileAddress" placeholder="Street, City, State, PIN">
             </div>
           </div>
 
           <div class="section-divider">
-            <h4>Change Password</h4>
+            <h4>Banking &amp; Instant UPI Payment Info (For Invoices)</h4>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="profileUpiId">UPI ID (e.g. name@okhdfcbank / mobile@upi)</label>
+              <input type="text" id="profileUpiId" placeholder="alex@upi">
+              <span class="stat-note">Auto-generates dynamic UPI QR Code on invoices</span>
+            </div>
+            <div class="form-group">
+              <label for="profileBankName">Bank Name</label>
+              <input type="text" id="profileBankName" placeholder="HDFC Bank / ICICI">
+            </div>
+            <div class="form-group">
+              <label for="profileAccountNum">Account Number</label>
+              <input type="text" id="profileAccountNum" placeholder="501002345678">
+            </div>
+            <div class="form-group">
+              <label for="profileIfsc">IFSC Code</label>
+              <input type="text" id="profileIfsc" placeholder="HDFC0001234">
+            </div>
+            <div class="form-group">
+              <label for="profilePan">PAN Card Number</label>
+              <input type="text" id="profilePan" placeholder="ABCDE1234F">
+            </div>
+            <div class="form-group">
+              <label for="profileGstin">GSTIN</label>
+              <input type="text" id="profileGstin" placeholder="07AAAAA0000A1Z5">
+            </div>
+          </div>
+
+          <div class="section-divider">
+            <h4>Change Security Password</h4>
           </div>
           <p class="form-hint">Leave blank to keep your current password</p>
           <div class="form-grid">
-            <div class="form-group">
-              <label for="profileCurrentPass">Current Password</label>
-              <input type="password" id="profileCurrentPass" placeholder="Required to change password">
-            </div>
             <div class="form-group">
               <label for="profileNewPass">New Password</label>
               <input type="password" id="profileNewPass" placeholder="Min. 6 characters" minlength="6">
             </div>
           </div>
 
-          <button type="submit" class="btn-gradient">Save Profile Changes</button>
+          <button type="submit" class="btn-gradient">Save Settings &amp; Bank Details</button>
         </form>
       </section>
 
