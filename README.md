@@ -83,8 +83,8 @@ Create a `.env` file in the root folder (or copy `.env.example`):
 ```env
 PORT=5000
 NODE_ENV=development
-MONGO_URI=mongodb+srv://mittalyashit_db_user:Yash%402006@cluster0.7bejggv.mongodb.net/college?retryWrites=true&w=majority
-JWT_SECRET=taxpulse_aiml_chitkara_secure_jwt_token_2026
+MONGO_URI=your_mongodb_connection_string_here
+JWT_SECRET=your_jwt_secret_key_here
 CLIENT_URL=http://localhost:5000
 ```
 *(The MongoDB Atlas cluster has IP `0.0.0.0/0` whitelisted, so it connects immediately on all 3 members' laptops).*
