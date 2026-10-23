@@ -103,20 +103,9 @@ Open your browser and navigate to:
 ```
 http://localhost:5000
 ```
-
 ---
 
-## 👥 5. Three-Member Role Division (Viva & Evaluation)
-
-| Member | Assessment Responsibilities | Viva Topics to Defend |
-| :--- | :--- | :--- |
-| **Member 1 (Lead)** | Express Server Setup, MongoDB Atlas connection, Mongoose relational schemas (`User`, `Client`, `Invoice`, `Expense`), and Progressive Tax / 44ADA backend logic. | Node.js Event Loop, CommonJS vs ES Modules, Mongoose Schemas & Relational references, CRUD REST APIs. |
-| **Member 2** | Security & Auth (`bcryptjs` hashing, JWT authentication middleware), Multer receipt file uploads, and Postman API test collection. | Hashing vs Encryption, JWT header/payload/signature, HTTP status codes, Multer disk storage and file validation. |
-| **Member 3** | Frontend-to-Backend REST API client integration (`api.js`), Socket.IO real-time event sync, UI enhancements, and Cloud Pilot Deployment. | CORS policies, REST consumption using Fetch/Axios, WebSockets vs HTTP polling, cloud environment configuration. |
-
----
-
-## 🧪 6. API Endpoints Reference
+## 🧪 5. API Endpoints Reference
 
 | Method | Endpoint | Description | Access |
 | :--- | :--- | :--- | :--- |
@@ -142,7 +131,7 @@ http://localhost:5000
 
 ---
 
-## 📦 7. Pilot Cloud Deployment
+## 📦 6. Pilot Cloud Deployment
 
 To deploy for free on **Render.com** (Pilot Stage):
 1. Push this repository to GitHub.
